@@ -1,0 +1,11 @@
+permissions:
+    permissions.build: false
+info:
+    prefix: '[Noob]'
+rank: 0
+promoteTo: 'admin'
+demoteTo: ''
+worlds:
+    creative:
+        permissions.build: true
+inheritance: []

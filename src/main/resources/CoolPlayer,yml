@@ -1,0 +1,9 @@
+permissions:
+    permissions.example: true
+groups:
+- admin
+worlds:
+    creative:
+        example.plugin: false
+info:
+    prefix: '[Cool]'

@@ -1,0 +1,12 @@
+permissions:
+    permissions.*: true
+info:
+    prefix: '[Noob]'
+rank: -1
+promoteTo: ''
+demoteTo: 'default'
+worlds:
+    creative:
+        permissions.build: true
+inheritance: 
+- default
