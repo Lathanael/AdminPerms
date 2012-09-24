@@ -27,6 +27,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import lib.SQL.PatPeter.SQLibrary.DatabaseConfig.DatabaseType;
@@ -34,10 +35,9 @@ import lib.SQL.PatPeter.SQLibrary.DatabaseConfig.Parameter;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 
-import be.Balor.Tools.Debug.ACLogger;
-import be.Balor.Tools.Debug.DebugLog;
-import be.Balor.bukkit.AdminCmd.ACHelper;
-import be.Balor.bukkit.AdminCmd.ConfigEnum;
+import de.Lathanael.AdminPerms.Logging.DebugLog;
+import de.Lathanael.AdminPerms.bukkit.ConfigEnum;
+import de.Lathanael.AdminPerms.bukkit.Main;
 
 public abstract class Database {
 	public static Database DATABASE;
@@ -56,7 +56,7 @@ public abstract class Database {
 		}
 		final DatabaseConfig config = new DatabaseConfig();
 		Database db;
-		final String dbWrapper = ConfigEnum.DATA_WRAPPER.getString();
+		final String dbWrapper = ConfigEnum.BACKEND.getString();
 		if (dbWrapper.equalsIgnoreCase("mysql")) {
 			config.setType(DatabaseType.MYSQL);
 			try {
@@ -75,16 +75,14 @@ public abstract class Database {
 		} else if (dbWrapper.equalsIgnoreCase("sqlite")) {
 			config.setType(DatabaseType.SQLITE);
 			try {
-				config.setParameter(Parameter.DB_LOCATION, ACHelper
-						.getInstance().getCoreInstance().getDataFolder()
-						.getAbsolutePath());
+				config.setParameter(Parameter.DB_LOCATION, Main.getInstance().getDataFolder().getAbsolutePath());
 				config.setParameter(Parameter.DB_NAME, "admincmd");
 
 			} catch (final NullPointerException e) {
 			} catch (final InvalidConfigurationException e) {
 			}
 		}
-		config.setLog(ACHelper.getInstance().getCoreInstance().getLogger());
+		config.setLog(Main.getInstance().getLogger());
 		try {
 			config.setParameter(Parameter.DB_PREFIX, "[AdminCmd Database]");
 		} catch (final NullPointerException e1) {
@@ -100,7 +98,8 @@ public abstract class Database {
 				db = DatabaseFactory.createDatabase(config);
 			}
 		} catch (final InvalidConfigurationException e) {
-			ACLogger.severe("Problem while trying to load the Database", e);
+			Main.getInstance().getLogger().severe("Problem while trying to load the Database, refer to the debug.log.");
+			DebugLog.INSTANCE.log(Level.SEVERE, "Problem while trying to load the Database", e);
 			db = null;
 		}
 		DATABASE = db;
