@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 
 import de.Lathanael.AdminPerms.Backend.IBackend;
@@ -40,6 +41,7 @@ public class PermissionsHandler {
 	private static final PermissionsHandler instance = new PermissionsHandler();
 	private HashMap<String, PermissionAttachment> permissions = new HashMap<String, PermissionAttachment>();
 	private IBackend perms;
+	private BukkitPermsReflection replacePermissible = new BukkitPermsReflection();
 	
 	public static PermissionsHandler getInstance() {
 		return instance;
@@ -68,6 +70,21 @@ public class PermissionsHandler {
 		PermissionAttachment attachment = player.addAttachment(Main.getInstance());
 		permissions.put(player.getName().toLowerCase(), attachment);
 		calculateAttachment(player);
+		try {
+			replacePermissible.replacePermissible(player, new AdminPermsPermissible(player));
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void unregisterPlayer(final Player[] players) {
@@ -122,14 +139,24 @@ public class PermissionsHandler {
 		for (String key : attachment.getPermissions().keySet()) {
 			attachment.unsetPermission(key);
 		}
-		for (Map.Entry<String, Boolean> entry : calculatePlayerPermissions(player.getName().toLowerCase(), worldName.toLowerCase()).entrySet()) {
+		Map<String, Boolean> perms = calculatePlayerPermissions(player.getName().toLowerCase(), worldName.toLowerCase());
+		for (Map.Entry<String, Boolean> entry : perms.entrySet()) {
 			attachment.setPermission(entry.getKey(), entry.getValue());
 		}
+		PlayerHandler.getInstance().getPlayer(player).setCalculatedPerms(perms);
 		player.recalculatePermissions();
 	}
 	
 	public void calculateAttachment(final Player player) {
 		calculateAttachment(player, player.getWorld().getName().toLowerCase());
+	}
+	
+	public boolean hasFalsePerm(final Player player, final String permission) {
+		return PlayerHandler.getInstance().getPlayer(player).getCalculatedPerms().contains(permission.toLowerCase());
+	}
+	
+	public boolean hasFalsePerm(final Player player, final Permission permission) {
+		return hasFalsePerm(player, permission.getName().toLowerCase());
 	}
 	
 	private Map<String, Boolean> calculatePlayerPermissions(final String player, final String world) {

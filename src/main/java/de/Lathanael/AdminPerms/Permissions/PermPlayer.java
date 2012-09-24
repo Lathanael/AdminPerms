@@ -23,9 +23,11 @@ package de.Lathanael.AdminPerms.Permissions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.entity.Player;
 
@@ -42,6 +44,7 @@ public class PermPlayer {
 	private final Map<String, Map<String, Boolean>> worldPermissions = Collections.synchronizedMap(new HashMap<String, Map<String, Boolean>>());
 	private final List<String> groups = Collections.synchronizedList(new ArrayList<String>());
 	private final Map<String, String> info = Collections.synchronizedMap(new HashMap<String, String>());
+	private final Set<String> calculatedPerms = Collections.synchronizedSet(new HashSet<String>());
 	private Group highestGroup = null;
 	
 	public PermPlayer(final String name, final Map<String, Boolean> permissions, 
@@ -184,5 +187,17 @@ public class PermPlayer {
 			this.groups.add(group.toLowerCase());
 		}
 		setHighestGroup();
+	}
+	
+	public void setCalculatedPerms(final Map<String, Boolean> perms) {
+		for (Map.Entry<String, Boolean> entry : perms.entrySet()) {
+			if (!entry.getValue()) {
+				calculatedPerms.add(entry.getKey());
+			}
+		}
+	}
+	
+	public Set<String> getCalculatedPerms() {
+		return calculatedPerms;
 	}
 }

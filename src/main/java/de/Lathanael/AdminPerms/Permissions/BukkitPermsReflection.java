@@ -20,10 +20,47 @@
 
 package de.Lathanael.AdminPerms.Permissions;
 
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+
+import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
+import org.bukkit.permissions.PermissibleBase;
+
+import de.Lathanael.AdminPerms.Logging.DebugLog;
+
 /**
  * @author Lathanael (aka Philippe Leipold)
  *
  */
 public class BukkitPermsReflection {
 
+	private Set<Player> alreadyReplaced = new HashSet<Player>();
+	
+	public boolean replacePermissible(final Player player, final Permissible perm) throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+		if (alreadyReplaced.contains(player)) {
+			return false;
+		}
+		Class<?> humanEntity;
+		try {
+			humanEntity = Class.forName("org.bukkit.craftbukkit.entity.CraftHumanEntity");
+		} catch (ClassNotFoundException e) {
+			DebugLog.INSTANCE.log(Level.WARNING, "Could not retrieve HumanEntity Class. This may be caused by an unsupported server implementation.", e);
+			return false;
+		}
+		final Field fieldPerm = humanEntity.getDeclaredField("perm");
+		fieldPerm.setAccessible(true);
+		final PermissibleBase perms = (PermissibleBase) fieldPerm.get(player);
+		final Field fieldPermissions = PermissibleBase.class.getDeclaredField("permissions");
+		fieldPermissions.setAccessible(true);
+		fieldPermissions.set(perm, fieldPermissions.get(perms));
+		final Field fieldAttachment = PermissibleBase.class.getDeclaredField("attachments");
+		fieldAttachment.setAccessible(true);
+		fieldAttachment.set(perm, fieldAttachment.get(perms));
+		fieldPerm.set(player, perm);
+		alreadyReplaced.add(player);
+		return true;
+	}
 }

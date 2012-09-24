@@ -46,7 +46,11 @@ public class PlayerHandler {
 	}
 
 	public PermPlayer getPlayer(final String playerName) {
-		return players.get(playerName);
+		return players.get(playerName.toLowerCase());
+	}
+	
+	public PermPlayer getPlayer(final Player player) {
+		return players.get(player.getName().toLowerCase());
 	}
 	
 	public void addPlayer(final String playerName) {

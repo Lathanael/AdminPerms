@@ -40,7 +40,10 @@ public class AdminPermsPermissible extends PermissibleBase {
 
 	@Override
 	public boolean hasPermission(final String permission) {
-		return false;
+		if (PermissionsHandler.getInstance().hasFalsePerm(player, permission))
+			return false;
+		else
+			return super.hasPermission(permission); 
 	}
 	
 	@Override
