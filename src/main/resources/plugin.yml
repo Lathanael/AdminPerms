@@ -6,95 +6,105 @@ authors: [Lathanael]
 description: AdminPerms provides permissions in a simple true/false scheme and some additional player-metainformation
 
 commands:
-  permissions:
-    aliases: [perms, perm]
-    description: Commands for manipulating permissions.
+  ap_check:
+    aliases: [permcheck, pcheck]
+    description: check if a player or the sender has a permission (any plugin).
+    usage: /<command> <node> [player]
+  ap_dump:
+    aliases: [permdump, pdump]
+    description: Prints info about a player's (or the sender's) permissions.
+    usage: /<command> [player] [page]
+  ap_info:
+    aliases: [perminfo, pinfo]
+    description: Prints information on a specific permission.
+    usage: /<command> <node> 
+  ap_reload:
+    aliases: [permreload, preload]
+    description: Reload the plugin(includes configuration and permissions)
+    usage: /<command>
+  ap_rank:
+    aliases: [permrank, prank]
+    description: Promote or demote a player.
     usage: |
-        /<command> reload - reload the configuration from disk.
-        /<command> check <node> [player] - check if a player or the sender has a permission (any plugin).
-        /<command> info <node> - prints information on a specific permission.
-        /<command> dump [player] [page] - prints info about a player's (or the sender's) permissions.
-        /<command> setrank <player> <group> - set a player to be in a group with per-group permissions.
-        /<command> group - list group-related commands.
-        /<command> group list - list all groups.
-        /<command> group players <group> - list players in a group.
-        /<command> group setperm <group> <[world:]node> [true|false] - set a permission on a group.
-        /<command> group unsetperm <group> <[world:]node> - unset a permission on a group.
-        /<command> player - list player-related commands.
-        /<command> player groups <player> - list groups a player is in.
-        /<command> player setgroup <player> <group,...> - set a player to be in only the given groups.
-        /<command> player addgroup <player> <group> - add a player to a group.
-        /<command> player removegroup <player> <group> - remove a player from a group.
-        /<command> player setperm <player> <[world:]node> [true|false] - set a permission on a player.
-        /<command> player unsetperm <player> <[world:]node> - unset a permission on a player.
+        /<command> <pro(mote)> <player>
+        /<command> <de(mote)> <player>
+  ap_player:
+    aliases: [permplayer, pplayer]
+    description: check if a player or the sender has a permission (any plugin).
+    usage: |
+        /<command> groups <player> - list groups a player is in.
+        /<command> setgroup <player> <group,...> - set a player to be in only the given groups.
+        /<command> addgroup <player> <group,...> - add a player to a group.
+        /<command> removegroup <player> <group,...> - remove a player from a group.
+        /<command> setperm <player> <[world:]node> [true|false] - set a permission on a player.
+        /<command> unsetperm <player> <[world:]node> - unset a permission on a player.
+  ap_group:
+    aliases: [permgroup, pgroup]
+    description: check if a player or the sender has a permission (any plugin).
+    usage: |
+        /<command> list - list all groups.
+        /<command> players <group> - list players in a group.
+        /<command> setperm <group> <[world:]node> [true|false] - set a permission on a group.
+        /<command> unsetperm <group> <[world:]node> - unset a permission on a group.
 
 permissions:
-  permissions.*:
+  adminperms.*:
     default: op
-    description: Allows use of all PermissionsBukkit administration commands.
+    description: Allows use of all AdminPerms administration commands.
     children:
-      permissions.help: true
-      permissions.reload: true
-      permissions.check: true
-      permissions.info: true
-      permissions.dump: true
-      permissions.setrank: true
-      permissions.group.*: true
-      permissions.player.*: true
-  permissions.build:
+      adminperms.reload: true
+      adminperms.check: true
+      adminperms.info: true
+      adminperms.dump: true
+      adminperms.rank: true
+      adminperms.group.*: true
+      adminperms.player.*: true
+  adminperms.rank:
+    description: Allos use of /permrank.
+  adminperms.build:
     description: Allows player to build.
     default: true
-  permissions.help:
-    description: Allows viewing of usage for /permissions.
-  permissions.reload:
-    description: Allows use of /permissions reload.
-  permissions.check:
-    description: Allows use of /permissions check.
-  permissions.info:
-    description: Allows use of /permissions info.
-  permissions.dump:
-    description: Allows use of /permissions dump.
-  permissions.setrank:
-    description: Allows use of /permissions setrank (also requires per-group permissions).
-  permissions.group.*:
-    description: Allows use of all /permissions group commands.
+  adminperms.reload:
+    description: Allows use of /permreload.
+  adminperms.check:
+    description: Allows use of /permcheck.
+  adminperms.info:
+    description: Allows use of /perminfo.
+  adminperms.dump:
+    description: Allows use of /permdump.
+  adminperms.group.*:
+    description: Allows use of all /permgroup commands.
     children:
-      permissions.group.help: true
-      permissions.group.list: true
-      permissions.group.players: true
-      permissions.group.setperm: true
-      permissions.group.unsetperm: true
-  permissions.group.help:
-    description: Allows viewing of usage for /permissions group.
-  permissions.group.list:
-    description: Allows use of /permissions group list.
-  permissions.group.players:
-    description: Allows use of /permissions group players.
-  permissions.group.setperm:
-    description: Allows use of /permissions group setperm.
-  permissions.group.unsetperm:
-    description: Allows use of /permissions group unsetperm.
-  permissions.player.*:
-    description: Allows use of all /permissions player commands.
+      adminperms.group.list: true
+      adminperms.group.players: true
+      adminperms.group.setperm: true
+      adminperms.group.unsetperm: true
+  adminperms.group.list:
+    description: Allows use of /permgroup list.
+  adminperms.group.players:
+    description: Allows use of /permgroup players.
+  adminperms.group.setperm:
+    description: Allows use of /permgroup setperm.
+  adminperms.group.unsetperm:
+    description: Allows use of /permgroup unsetperm.
+  adminperms.player.*:
+    description: Allows use of all /permplayer commands.
     children:
-      permissions.player.help: true
-      permissions.player.groups: true
-      permissions.player.setgroup: true
-      permissions.player.addgroup: true
-      permissions.player.removegroup: true
-      permissions.player.setperm: true
-      permissions.player.unsetperm: true
-  permissions.player.help:
-    description: Allows viewing of usage for /permissions player.
-  permissions.player.groups:
-    description: Allows use of /permissions player groups.
-  permissions.player.setgroup:
-    description: Allows use of /permissions player setgroup.
-  permissions.player.addgroup:
-    description: Allows use of /permissions player addgroup.
-  permissions.player.removegroup:
-    description: Allows use of /permissions player removegroup.
-  permissions.player.setperm:
-    description: Allows use of /permissions player setperm.
-  permissions.player.unsetperm:
-    description: Allows use of /permissions player unsetperm.
+      adminperms.player.groups: true
+      adminperms.player.setgroup: true
+      adminperms.player.addgroup: true
+      adminperms.player.removegroup: true
+      adminperms.player.setperm: true
+      adminperms.player.unsetperm: true
+  adminperms.player.groups:
+    description: Allows use of /permplayer groups.
+  adminperms.player.setgroup:
+    description: Allows use of /permplayer setgroup.
+  adminperms.player.addgroup:
+    description: Allows use of /permplayer addgroup.
+  adminperms.player.removegroup:
+    description: Allows use of /permplayer removegroup.
+  adminperms.player.setperm:
+    description: Allows use of /permplayer setperm.
+  adminperms.player.unsetperm:
+    description: Allows use of /permplayer unsetperm.
