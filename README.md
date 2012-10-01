@@ -1,11 +1,10 @@
-PermissionsBukkit
+AdminPerms
 =================
 
 A plugin providing groups and other permissions configuration for Bukkit's built-in permissions architecture.
 
 Sample configuration file and more info on how the configuration is laid out follows:
 
-```yaml
 # PermissionsBukkit configuration file
 # 
 # A permission node is a string like 'permissions.build', usually starting
@@ -36,28 +35,36 @@ Sample configuration file and more info on how the configuration is laid out fol
 # signify color codes.
 
 users:
-    ConspiracyWizard:
-        permissions:
-            permissions.example: true
-        groups:
-        - admin
+
+File for ConspiracyWizard:
+```yaml
+permissions:
+    permissions.example: true
 groups:
-    default:
-        permissions:
-            permissions.build: false
-    admin:
-        permissions:
-            permissions.*: true
-        inheritance:
-        - user
-    user:
-        permissions:
-            permissions.build: true
-        worlds:
-            creative:
-                coolplugin.item: true
-        inheritance:
-        - default
-messages:
-    build: '&cYou do not have permission to build here.'
+- admin
+```
+groups:
+
+
+File for group default:
+```yaml
+permissions:
+    permissions.build: false
+```
+File for group admin:
+```yaml
+permissions:
+    permissions.*: true
+inheritance:
+- user
+```
+File for group user:
+```yaml
+permissions:
+    permissions.build: true
+worlds:
+    creative:
+        coolplugin.item: true
+inheritance:
+- default
 ```
