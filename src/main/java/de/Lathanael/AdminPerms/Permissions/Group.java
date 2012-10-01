@@ -124,6 +124,9 @@ public class Group {
 	}
 	
 	public void addOrChangeWorldPermission(final String permission, final boolean bool, final String world) {
+		if (worldPermissions.get(world) == null) {
+			worldPermissions.put(world, new HashMap<String, Boolean>());
+		}
 		worldPermissions.get(world).put(permission, bool);
 	}
 	
@@ -132,6 +135,9 @@ public class Group {
 	}
 	
 	public void removeWorldPermission(final String permission, final String world) {
+		if (worldPermissions.get(world) == null) {
+			return;
+		}
 		worldPermissions.get(world).remove(permission);
 	}
 	
@@ -149,6 +155,10 @@ public class Group {
 		for (String entry : worldPermissions.keySet()) {
 			wP = worldPermissions.get(entry.toLowerCase());
 			thisWP = this.worldPermissions.get(entry.toLowerCase());
+			if (thisWP == null) {
+				this.worldPermissions.put(entry.toLowerCase(), wP);
+				continue;
+			}
 			for (String entry2 : wP.keySet()) {
 				if (!thisWP.containsKey(entry2.toLowerCase())) {
 					thisWP.put(entry, wP.get(entry2.toLowerCase()));
@@ -164,6 +174,10 @@ public class Group {
 	
 	public void setWorldPermissions(final Map<String, Map<String,Boolean>> worldPermissions) {
 		for (String world : worldPermissions.keySet()) {
+			if (this.worldPermissions.get(world.toLowerCase()) == null) {
+				this.worldPermissions.put(world, worldPermissions.get(world));
+				continue;
+			}
 			this.worldPermissions.get(world.toLowerCase()).putAll(worldPermissions.get(world.toLowerCase()));
 		}
 	}
@@ -173,6 +187,9 @@ public class Group {
 	}
 	
 	public Map<String, Boolean> getWorldPermissions(final String worldName) {
+		if (worldPermissions.get(worldName.toLowerCase()) == null) {
+			return new HashMap<String, Boolean>();
+		}
 		return worldPermissions.get(worldName.toLowerCase());
 	}
 	

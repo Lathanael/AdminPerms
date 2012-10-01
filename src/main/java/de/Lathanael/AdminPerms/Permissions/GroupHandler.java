@@ -88,6 +88,7 @@ public class GroupHandler {
 	}
 	
 	public Map<String, Boolean> getGroupPermissions(final String groupName) {
+		
 		return groups.get(groupName.toLowerCase()).getPermissions();
 	}
 	

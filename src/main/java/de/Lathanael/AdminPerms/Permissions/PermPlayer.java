@@ -125,6 +125,9 @@ public class PermPlayer {
 	}
 
 	public Map<String, Boolean> getWorldPermissions(final String worldName) {
+		if (worldPermissions.get(worldName.toLowerCase()) == null) {
+			return new HashMap<String, Boolean>();
+		}
 		return worldPermissions.get(worldName.toLowerCase());
 	}
 	
@@ -150,6 +153,9 @@ public class PermPlayer {
 	}
 	
 	public void addOrChangeWorldPermission(final String permission, final boolean bool, final String world) {
+		if (worldPermissions.get(world) == null) {
+			worldPermissions.put(world, new HashMap<String, Boolean>());
+		}
 		worldPermissions.get(world).put(permission, bool);
 	}
 	
@@ -158,6 +164,9 @@ public class PermPlayer {
 	}
 
 	public void removeWorldPermission(final String permission, final String world) {
+		if (worldPermissions.get(world) == null) {
+			return;
+		}
 		worldPermissions.get(world).remove(permission);
 	}
 	
