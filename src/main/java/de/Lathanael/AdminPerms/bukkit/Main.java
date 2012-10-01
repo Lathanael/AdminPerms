@@ -20,6 +20,7 @@
 
 package de.Lathanael.AdminPerms.bukkit;
 
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -61,18 +62,25 @@ public class Main extends JavaPlugin {
 			File groupFolder = new File(getDataFolder() + File.separator + "groups");
 			playerFolder.mkdirs();
 			groupFolder.mkdirs();
-			YamlConfiguration file1 = YamlConfiguration.loadConfiguration(getResource("default.yml"));
-			YamlConfiguration file2 = YamlConfiguration.loadConfiguration(getResource("admin.yml"));
-			YamlConfiguration file3 = YamlConfiguration.loadConfiguration(getResource("CoolPlayer.yml"));
+			YamlConfiguration file1 = new YamlConfiguration(), file2 = new YamlConfiguration(), file3 = new YamlConfiguration();
+			file1.options().pathSeparator('/');
+			file2.options().pathSeparator('/');
+			file3.options().pathSeparator('/');
 			ConfigEnum.FIRSTSTART.setValue(false);
 			try {
+				file1.load(getResource("default.yml"));
+				file2.load(getResource("admin.yml"));
+				file3.load(getResource("coolplayer.yml"));
 				file1.save(new File(groupFolder, "default.yml"));
 				file2.save(new File(groupFolder, "admin.yml"));
-				file3.save(new File(playerFolder, "CoolPlayer.yml"));
+				file3.save(new File(playerFolder, "coolplayer.yml"));
 				ConfigEnum.save();
 			} catch (IOException e) {
 				DebugLog.INSTANCE.log(Level.WARNING, "Could not save default files.", e.getStackTrace());
 				getLogger().warning("Could not save default files, for more details open the debug.log (if debug logging is turned on!)");
+			} catch (InvalidConfigurationException e) {
+				DebugLog.INSTANCE.log(Level.WARNING, "Could not load default files.", e.getStackTrace());
+				getLogger().warning("Could not load default files, for more details open the debug.log (if debug logging is turned on!)");
 			}
 		}
 		final String backend = ConfigEnum.BACKEND.getString();

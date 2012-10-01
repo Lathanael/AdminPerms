@@ -25,10 +25,13 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import de.Lathanael.AdminPerms.Logging.DebugLog;
 
 /**
  * @author Lathanael (aka Philippe Leipold)
@@ -111,18 +114,33 @@ public enum ConfigEnum {
 	public static void setConfig(final File configFile) {
 		ConfigEnum.configFile = configFile;
 		if (!configFile.exists()) {
-			try {
-				configFile.createNewFile();
-			} catch (IOException e) {
-				// TODO: Make sure config is created.
+			for (int i = 0; i < 3; i++) {
+				try {
+					configFile.createNewFile();
+					break;
+				} catch (IOException e) {
+					if (i == 2) {
+						Main.getInstance().getLogger().warning("Could not create default "
+								+ "config! Please refere to the debug.log.");
+						DebugLog.INSTANCE.log(Level.SEVERE, "Unable to create config.yml!", e);
+					}
+				}
 			}
 		}
 		config = YamlConfiguration.loadConfiguration(configFile);
 		config.options().copyDefaults(true);
 		config.addDefaults(getDefaultvalues());
-		try {
-			ConfigEnum.save();
-		} catch (final IOException e) {
+		for (int i = 0; i < 3; i++) {
+			try {
+				ConfigEnum.save();
+				break;
+			} catch (IOException e) {
+				if (i == 2) {
+					Main.getInstance().getLogger().warning("Could not save the "
+							+ "config! Please refere to the debug.log.");
+					DebugLog.INSTANCE.log(Level.SEVERE, "Unable to save to config.yml!", e);
+				}
+			}
 		}
 	}
 
@@ -130,8 +148,7 @@ public enum ConfigEnum {
 		config.save(configFile);
 	}
 
-	public static void reload() throws IOException,
-			InvalidConfigurationException {
+	public static void reload() throws IOException, InvalidConfigurationException {
 		save();
 		config.load(configFile);
 	}	
