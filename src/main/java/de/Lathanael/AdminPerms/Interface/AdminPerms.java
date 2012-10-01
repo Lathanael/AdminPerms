@@ -20,34 +20,60 @@
 
 package de.Lathanael.AdminPerms.Interface;
 
-import java.util.List;
+import java.util.Set;
 
-import de.Lathanael.AdminPerms.Interface.PermissionInfo;
 import de.Lathanael.AdminPerms.Permissions.Group;
-import de.Lathanael.AdminPerms.Permissions.PermissionsHandler;
+import de.Lathanael.AdminPerms.Permissions.GroupHandler;
 
 /**
+ * API for AdminPerms and its functions. Use this class in your plugin to
+ * communicate with AdminPerms!
+ * 
  * @author Lathanael (aka Philippe Leipold)
  *
  */
 public class AdminPerms {
-
-
+	
+	// Group Section
 	/**
-	 * Returns permission info on the given player.
-	 * @param playerName The name of the player.
-	 * @return A PermissionsInfo about this player.
+	 * Returns a {@code Set<Group>} of all currently in AdminPerms
+	 * existing {@link Group}s
+	 * 
+	 * @return A {@code Set<Group>} of {@link Group}s or an <b>empty {@code Set}</b>
+	 * if no group exists! 
 	 */
-	public PermissionInfo getPlayerInfo(String playerName) {
-		if (getNode("users/" + playerName) == null) {
-			return null;
-		} else {
-			return new PermissionInfo(this, getNode("users/" + playerName), "groups");
-		}
+	public Set<Group> getGroups() {
+		return GroupHandler.getInstance().getGroups();
 	}
 	
-	public List<Group> getGroups() {
-		return PermissionsHandler.getInstance().getBackend().getGroups();
+	/**
+	 * Returns the {@link Group} linked to the given name.
+	 * 
+	 * @param groupName - The name of the wanted group as a String
+	 * @return The {@link Group} corresponding to the name or <b>null</b>
+	 * if it does not exist.
+	 */
+	public Group getGroup(final String groupName) {
+		return GroupHandler.getInstance().getGroup(groupName);
+	}
+	
+	/**
+	 * Returns the Names of all currently in AdminPerms existing groups.
+	 * 
+	 * @return A {@code Set<String>} containing the names of all groups or an <b>empty</b>
+	 * {@code Set} if no group exists!  
+	 */
+	public Set<String> getAllGroupNames() {
+		return GroupHandler.getInstance().getGroupNames();
+	}
+	
+	/**
+	 * Gets the default {@link Group}
+	 * 
+	 * @return A {@link Group} object or <b>null</b> if there is not default group.
+	 */
+	public Group getDefaultGroup() {
+		return GroupHandler.getInstance().getDefaultGroup();
 	}
 	
 }
