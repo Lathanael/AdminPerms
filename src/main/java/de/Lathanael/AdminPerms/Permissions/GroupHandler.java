@@ -75,6 +75,7 @@ public class GroupHandler {
 	public Group getDefaultGroup() {
 		return defaultGroup;
 	}
+	
 	public Set<Group> getGroups() {
 		final Set<Group> groups = new HashSet<Group>();
 		for (Map.Entry<String, Group> entry : this.groups.entrySet()) {
@@ -88,11 +89,11 @@ public class GroupHandler {
 	}
 	
 	public Map<String, Boolean> getGroupPermissions(final String groupName) {
-		
-		return groups.get(groupName.toLowerCase()).getPermissions();
+		return groups.get(groupName.toLowerCase()) != null ? groups.get(groupName.toLowerCase())
+				.getPermissions() : new HashMap<String, Boolean>();
 	}
 	
-	public Map<String, Boolean> getGroupsPermissions(final List<String> groups) {
+	public Map<String, Boolean> getGroupsPermissions(final Set<String> groups) {
 		Map<String, Boolean> newGroupPermissions = new HashMap<String, Boolean>();
 		Group group;
 		int oldRank = -1;
@@ -115,22 +116,30 @@ public class GroupHandler {
 	}
 	
 	public Set<String> getPlayers(final String groupName) {
-		return groups.get(groupName.toLowerCase()).getPlayers();
+		return groups.get(groupName.toLowerCase()) != null 
+				? groups.get(groupName.toLowerCase()).getPlayers() : new HashSet<String>();
 	}
 	
-	public List<Player> getOnlinePlayers(final String groupName) {
-		return groups.get(groupName.toLowerCase()).getOnlinePlayers();
+	public Set<Player> getOnlinePlayers(final String groupName) {
+		return groups.get(groupName.toLowerCase()) != null 
+				? groups.get(groupName.toLowerCase()).getOnlinePlayers() : new HashSet<Player>();
 	}
 	
 	public int getRank(final String groupName) {
-		return groups.get(groupName.toLowerCase()).getRank();
+		return groups.get(groupName.toLowerCase()) != null ? groups.get(groupName.toLowerCase())
+				.getRank() : 0;
 	}
 	
+	/**
+	 * Gets a {@link Group} object belonging to the given String
+	 * @param groupName The name of the wanted group.
+	 * @return The {@code Group} or <b>null</b> if it does not exist.
+	 */
 	public Group getGroup(final String groupName) {
 		return groups.get(groupName.toLowerCase());
 	}
 
-	public Map<String, Boolean> getWorldGroupsPermissions(final List<String> groups,
+	public Map<String, Boolean> getWorldGroupsPermissions(final Set<String> groups,
 			final String worldName) {
 		Map<String, Boolean> newWorldGroupPermissions = new HashMap<String, Boolean>();
 		Group group;

@@ -45,10 +45,22 @@ public class PlayerHandler {
 		players.clear();
 	}
 
+	/**
+	 * Gets a {@link PermPlayer} object for the given name
+	 * @param playerName The name for which a PermPlayer should be returned
+	 * @return The to the name associated {@link PermPlayer} object or <b>null</b>
+	 * if there is no PermPlayer
+	 */
 	public PermPlayer getPlayer(final String playerName) {
 		return players.get(playerName.toLowerCase());
 	}
 	
+	/**
+	 * Gets a {@link PermPlayer} object for the given {@link Player}
+	 * @param player The {@link Player} for which a PermPlayer should be returned
+	 * @return The to the {@link Player} associated {@link PermPlayer} object or <b>null</b>
+	 * if there is no PermPlayer
+	 */
 	public PermPlayer getPlayer(final Player player) {
 		return players.get(player.getName().toLowerCase());
 	}

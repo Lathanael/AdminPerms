@@ -23,6 +23,7 @@ package de.Lathanael.AdminPerms.Command;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -55,7 +56,7 @@ public class PlayerCommand extends BaseCommand {
 			PlayerHandler.getInstance().addPlayer(player);
 		}
 		if (cmd.equals("groups") && checkPerm(sender, ".groups")) {
-			final List<String> groups = PlayerHandler.getInstance().getPlayer(player.toLowerCase()).getGroups();
+			final Set<String> groups = PlayerHandler.getInstance().getPlayer(player.toLowerCase()).getGroups();
 			if (groups == null) {
 				sender.sendMessage(ChatColor.GOLD + player + ChatColor.AQUA
 						+ "is not member of any group!");
@@ -84,7 +85,7 @@ public class PlayerCommand extends BaseCommand {
 				insufficientParams(sender, "addgroup", "<player> <group(s)>", 3);
 				return;
 			}
-			final List<String> list = PlayerHandler.getInstance().getPlayer(player).getGroups();
+			final Set<String> list = PlayerHandler.getInstance().getPlayer(player).getGroups();
 			final List<String> groups = new ArrayList<String>(Arrays.asList(args[2].split(",")));
 			final List<String> inGroup = new ArrayList<String>();
 			for (String group : groups) {
@@ -112,7 +113,7 @@ public class PlayerCommand extends BaseCommand {
 				insufficientParams(sender, "removegroup", "<player> <group(s)>", 3);
 				return;
 			}
-			final List<String> list = PlayerHandler.getInstance().getPlayer(player).getGroups();
+			final Set<String> list = PlayerHandler.getInstance().getPlayer(player).getGroups();
 			final List<String> groups = new ArrayList<String>(Arrays.asList(args[2].split(",")));
 			final List<String> inGroup = new ArrayList<String>();
 			for (String group : groups) {
@@ -212,6 +213,14 @@ public class PlayerCommand extends BaseCommand {
 	}
 	
 	private String buildMessage (final List<String> list) {
+		String msg = "";
+		for (String s : list) {
+			msg += ", " + s;
+		}
+		return msg.substring(0, msg.length() - 2);
+	}
+	
+	private String buildMessage (final Set<String> list) {
 		String msg = "";
 		for (String s : list) {
 			msg += ", " + s;

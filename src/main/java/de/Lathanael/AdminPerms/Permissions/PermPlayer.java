@@ -20,7 +20,6 @@
 
 package de.Lathanael.AdminPerms.Permissions;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,7 +41,7 @@ public class PermPlayer {
 	private final String name;
 	private final Map<String, Boolean> permissions = Collections.synchronizedMap(new HashMap<String, Boolean>());
 	private final Map<String, Map<String, Boolean>> worldPermissions = Collections.synchronizedMap(new HashMap<String, Map<String, Boolean>>());
-	private final List<String> groups = Collections.synchronizedList(new ArrayList<String>());
+	private final Set<String> groups = Collections.synchronizedSet(new HashSet<String>());
 	private final Map<String, String> info = Collections.synchronizedMap(new HashMap<String, String>());
 	private final Set<String> calculatedPerms = Collections.synchronizedSet(new HashSet<String>());
 	private Group highestGroup = null;
@@ -88,6 +87,11 @@ public class PermPlayer {
 		}
 	}
 	
+	/**
+	 * Returns te highest group a player is in.
+	 * @return A {@link Group} object of the highest group or
+	 * <b>null</b> if the player is in no group.
+	 */
 	public Group getHighestGroup() {
 		return highestGroup;
 	}
@@ -108,14 +112,23 @@ public class PermPlayer {
 		return info;
 	}
 	
+	/**
+	 * Returns a information entry of this player.
+	 * 
+	 * @param infoEntry The entry which should be looked up.
+	 * @return A {@code String} with the wanted information or an <b>empty</b> {@code String}.
+	 */
 	public String getInfo(final String infoEntry) {
-		return info.get(infoEntry.toLowerCase());
+		return info.get(infoEntry) != null ? info.get(infoEntry) : "";
 	}
 	
 	public void setInfo(final String infoName, final String infoEntry) {
-		info.put(infoName.toLowerCase(), infoEntry);
+		info.put(infoName, infoEntry);
 	}
 	
+	/**
+	 * Retruns the name of this player as a {@code String}
+	 */
 	public String getName() {
 		return name;
 	}
@@ -134,7 +147,7 @@ public class PermPlayer {
 	public Map<String, Map<String, Boolean>> getAllWorldPermissions() {
 		return worldPermissions;
 	}
-	public List<String> getGroups() {
+	public Set<String> getGroups() {
 		return groups;
 	}
 	

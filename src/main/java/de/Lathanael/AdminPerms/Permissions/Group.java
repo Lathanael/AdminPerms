@@ -27,6 +27,7 @@ import de.Lathanael.AdminPerms.bukkit.Main;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,26 +68,50 @@ public class Group {
 		return info;
 	}
 	
+	/**
+	 * Returns a information entry of this group.
+	 * 
+	 * @param infoEntry The entry which should be looked up.
+	 * @return A {@code String} with the wanted information or an <b>empty</b> {@code String}.
+	 */
 	public String getInfo(final String infoEntry) {
-		return info.get(infoEntry);
+		return (info.get(infoEntry) != null) ? info.get(infoEntry) : "";
 	}
 	
 	public List<String> getInheritance() {
 		return inheritance;
 	}
 	
+	/**
+	 * Retruns the name of this group as a {@code String}
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * Returns the rank of this group as an {@code Integer}
+	 * </br></br>
+	 * If the rank equals <i>-1</i> this group is a special group.
+	 */
 	public int getRank() {
 		return rank;
 	}
 	
+	/**
+	 * Returns the name as a {@code String} of the group to which a player
+	 * of this group is promoted to, if the promoteTo is not set it is an
+	 * <b>empty</b> {@code String}.
+	 */
 	public String getPromoteTo() {
 		return promoteTo;
 	}
 
+	/**
+	 * Returns the name as a {@code String} of the group to which a player
+	 * of this group is demoted to, if the demoteTo is not set it is an
+	 * <b>empty</b> {@code String}.
+	 */
 	public String getDemoteTo() {
 		return demoteTo;
 	}
@@ -201,8 +226,8 @@ public class Group {
 		return players;
 	}
 
-	public List<Player> getOnlinePlayers() {
-		ArrayList<Player> result = new ArrayList<Player>();
+	public Set<Player> getOnlinePlayers() {
+		Set<Player> result = new HashSet<Player>();
 		for (String user : getPlayers()) {
 			Player player = Main.getInstance().getServer().getPlayer(user);
 			if (player != null && player.isOnline()) {
