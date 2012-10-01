@@ -20,6 +20,8 @@
 
 package de.Lathanael.AdminPerms.Backend.SQL;
 
+import org.bukkit.entity.Player;
+
 import de.Lathanael.AdminPerms.Backend.IBackend;
 import de.Lathanael.AdminPerms.Permissions.GroupHandler;
 import de.Lathanael.AdminPerms.Permissions.PlayerHandler;
@@ -60,21 +62,52 @@ public class SQLBackend implements IBackend {
 		
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.Lathanael.AdminPerms.Backend.IBackend#save(java.lang.String)
+	 */
 	@Override
 	public void save(final String playerName) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.Lathanael.AdminPerms.Backend.IBackend#load(java.lang.String)
+	 */
 	@Override
 	public void load(final String playerName) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.Lathanael.AdminPerms.Backend.IBackend#reload(java.lang.String)
+	 */
 	@Override
 	public void reload(final String playerName) {
 		save(playerName);
 		load(playerName);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see de.Lathanael.AdminPerms.Backend.IBackend#createDefaultPlayerEntry(org.bukkit.entity.Player)
+	 */
+	@Override
+	public void createDefaultPlayerEntry(final Player player) {
+		createDefaultPlayerEntry(player.getName().toLowerCase());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see de.Lathanael.AdminPerms.Backend.IBackend#createDefaultPlayerEntry(java.lang.String)
+	 */
+	@Override
+	public void createDefaultPlayerEntry(String playerName) {
+		// TODO Auto-generated method stub
+		
 	}
 }
