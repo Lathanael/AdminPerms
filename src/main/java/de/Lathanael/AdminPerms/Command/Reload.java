@@ -33,7 +33,7 @@ import de.Lathanael.AdminPerms.bukkit.ConfigEnum;
 
 /**
  * @author Lathanael (aka Philippe Leipold)
- * @author platymuus (original author)
+ * @author SpaceManiac (original author)
  *
  */
 public class Reload extends BaseCommand {

@@ -35,6 +35,7 @@ import de.Lathanael.AdminPerms.Permissions.PlayerHandler;
 
 /**
  * @author Lathanael (aka Philippe Leipold)
+ * @author SpaceManiac (original author)
  *
  */
 public class PlayerCommand extends BaseCommand {

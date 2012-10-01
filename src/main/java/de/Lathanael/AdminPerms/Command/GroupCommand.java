@@ -32,7 +32,7 @@ import de.Lathanael.AdminPerms.Permissions.PermissionsHandler;
 
 /**
  * @author Lathanael (aka Philippe Leipold)
- *
+ * @author SpaceManiac (original author)
  */
 public class GroupCommand extends BaseCommand {
 

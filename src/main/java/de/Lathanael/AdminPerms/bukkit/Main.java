@@ -37,7 +37,7 @@ import java.util.logging.Level;
 
 /**
  * @author Lathanael (aka Philippe Leipold)
- * @author platymuus (original author)
+ * @author SpaceManiac (original author)
  *
  */
 public class Main extends JavaPlugin {

@@ -35,7 +35,7 @@ import de.Lathanael.AdminPerms.bukkit.Main;
 
 /**
  * @author Lathanael (aka Philippe Leipold)
- *
+ * @author SpaceManiac (original author) *
  */
 public class Dump extends BaseCommand {
 
