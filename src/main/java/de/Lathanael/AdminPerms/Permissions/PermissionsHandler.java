@@ -22,6 +22,7 @@ package de.Lathanael.AdminPerms.Permissions;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
@@ -39,7 +40,8 @@ import de.Lathanael.AdminPerms.bukkit.Main;
 public class PermissionsHandler {
 	
 	private static final PermissionsHandler instance = new PermissionsHandler();
-	private HashMap<String, PermissionAttachment> permissions = new HashMap<String, PermissionAttachment>();
+	private HashMap<String, PermissionAttachment> permissions = new HashMap<String,
+			PermissionAttachment>();
 	private IBackend perms;
 	private BukkitPermsReflection replacePermissible = new BukkitPermsReflection();
 	
@@ -64,26 +66,25 @@ public class PermissionsHandler {
 
 	public void registerPlayer(final Player player) {
 		if (permissions.containsKey(player.getName().toLowerCase())) {
-			DebugLog.INSTANCE.warning("Registering " + player.getName() + ": was already registered");
+			DebugLog.INSTANCE.warning("Registering " + player.getName() + ": was already " 
+					+ "registered");
 			unregisterPlayer(player);
+		}
+		if (PlayerHandler.getInstance().getPlayer(player) == null) {
+			perms.createDefaultPlayerEntry(player);
+			perms.load(player.getName());
 		}
 		PermissionAttachment attachment = player.addAttachment(Main.getInstance());
 		permissions.put(player.getName().toLowerCase(), attachment);
 		calculateAttachment(player);
 		try {
 			replacePermissible.replacePermissible(player, new AdminPermsPermissible(player));
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			Main.getInstance().getLogger().warning("Could not inject AdminPerms permissible"
+					+ " into bukkit, cause: " + e.getCause());
+			Main.getInstance().getLogger().warning("For more information refer to the"
+					+ " debug.log!");
+			DebugLog.INSTANCE.log(Level.SEVERE, "Could not inject AdminPerms permissible!", e);
 		}
 	}
 
@@ -99,11 +100,13 @@ public class PermissionsHandler {
 				player.removeAttachment(permissions.get(player.getName().toLowerCase()));
 			}
 			catch (IllegalArgumentException ex) {
-				DebugLog.INSTANCE.warning("Unregistering " + player.getName() + ": player did not have attachment");
+				DebugLog.INSTANCE.warning("Unregistering " + player.getName() 
+						+ ": player did not have attachment");
 			}
 			permissions.remove(player.getName().toLowerCase());
 		} else {
-			DebugLog.INSTANCE.warning("Unregistering " + player.getName() + ": was not registered");
+			DebugLog.INSTANCE.warning("Unregistering " + player.getName() 
+					+ ": was not registered");
 		}
 	}
 
@@ -133,13 +136,15 @@ public class PermissionsHandler {
 		}
 		PermissionAttachment attachment = permissions.get(player.getName().toLowerCase());
 		if (attachment == null) {
-			DebugLog.INSTANCE.warning("Calculating permissions on " + player.getName() + ": attachment was null");
+			DebugLog.INSTANCE.warning("Calculating permissions on " + player.getName() 
+					+ ": attachment was null");
 			return;
 		}
 		for (String key : attachment.getPermissions().keySet()) {
 			attachment.unsetPermission(key);
 		}
-		Map<String, Boolean> perms = calculatePlayerPermissions(player.getName().toLowerCase(), worldName.toLowerCase());
+		Map<String, Boolean> perms = calculatePlayerPermissions(player.getName().toLowerCase(),
+				worldName.toLowerCase());
 		for (Map.Entry<String, Boolean> entry : perms.entrySet()) {
 			attachment.setPermission(entry.getKey(), entry.getValue());
 		}
@@ -152,31 +157,37 @@ public class PermissionsHandler {
 	}
 	
 	public boolean hasFalsePerm(final Player player, final String permission) {
-		return PlayerHandler.getInstance().getPlayer(player).getCalculatedPerms().contains(permission.toLowerCase());
+		return PlayerHandler.getInstance().getPlayer(player).getCalculatedPerms()
+				.contains(permission.toLowerCase());
 	}
 	
 	public boolean hasFalsePerm(final Player player, final Permission permission) {
 		return hasFalsePerm(player, permission.getName().toLowerCase());
 	}
 	
-	private Map<String, Boolean> calculatePlayerPermissions(final String player, final String world) {
+	private Map<String, Boolean> calculatePlayerPermissions(final String player,
+			final String world) {
 		final PermPlayer pPlayer = PlayerHandler.getInstance().getPlayer(player.toLowerCase());
 		if (pPlayer == null) {
 			PlayerHandler.getInstance().addPlayer(player.toLowerCase());
-			return calculateGroupPermissions(GroupHandler.getInstance().getDefaultGroup().getName(), world.toLowerCase());
+			return calculateGroupPermissions(GroupHandler.getInstance().getDefaultGroup()
+					.getName(), world);
 		}
 		Map<String, Boolean> perms = pPlayer.getPermissions();
 		// World permissions override non world ones
-		perms.putAll(pPlayer.getWorldPermissions(world.toLowerCase()));
-		Map<String, Boolean> groupPerms = GroupHandler.getInstance().getGroupsPermissions(pPlayer.getGroups());
-		Map<String, Boolean> worldGroupPerms = GroupHandler.getInstance().getWorldGroupsPermissions(pPlayer.getGroups(), world.toLowerCase());
+		perms.putAll(pPlayer.getWorldPermissions(world));
+		Map<String, Boolean> groupPerms = GroupHandler.getInstance()
+				.getGroupsPermissions(pPlayer.getGroups());
+		Map<String, Boolean> worldGroupPerms = GroupHandler.getInstance()
+				.getWorldGroupsPermissions(pPlayer.getGroups(), world);
 		// User permissions have a higher "value" than group permissions
 		for (Map.Entry<String, Boolean> entry : worldGroupPerms.entrySet()) {
 			if (!perms.containsKey(entry.getKey())) {
 				perms.put(entry.getKey(), entry.getValue());
 			}
 		}
-		// User permissions and world group permissions have a higher "value" than group permissions
+		// User permissions and world group permissions have a higher "value" 
+		// than group permissions
 		for (Map.Entry<String, Boolean> entry : groupPerms.entrySet()) {
 			if (!perms.containsKey(entry.getKey())) {
 				perms.put(entry.getKey(), entry.getValue());
@@ -185,10 +196,13 @@ public class PermissionsHandler {
 		return perms;
 	}
 
-	private Map<String, Boolean> calculateGroupPermissions(final String group, final String world) {
-		Map<String, Boolean> perms = GroupHandler.getInstance().getGroupPermissions(group.toLowerCase());
+	private Map<String, Boolean> calculateGroupPermissions(final String group,
+			final String world) {
+		Map<String, Boolean> perms = GroupHandler.getInstance()
+				.getGroupPermissions(group.toLowerCase());
 		// World permissions override non world ones
-		perms.putAll(GroupHandler.getInstance().getWorldGroupPermissions(group.toLowerCase(), world.toLowerCase()));
+		perms.putAll(GroupHandler.getInstance().getWorldGroupPermissions(group.toLowerCase(),
+				world));
 		return perms;
 	}
 }
