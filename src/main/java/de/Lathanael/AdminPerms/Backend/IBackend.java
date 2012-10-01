@@ -20,6 +20,8 @@
 
 package de.Lathanael.AdminPerms.Backend;
 
+import org.bukkit.entity.Player;
+
 /**
  * @author Lathanael (aka Philippe Leipold)
  *
@@ -37,4 +39,8 @@ public interface IBackend {
 	public abstract void load(final String playerName);
 	
 	public abstract void reload(final String playerName);
+	
+	public abstract void createDefaultPlayerEntry(final Player player);
+	
+	abstract void createDefaultPlayerEntry(final String playerName);
 }

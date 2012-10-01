@@ -29,6 +29,8 @@ import java.util.logging.Level;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+
 import de.Lathanael.AdminPerms.Backend.IBackend;
 import de.Lathanael.AdminPerms.Interface.SubDirFileFilter;
 import de.Lathanael.AdminPerms.Interface.SubDirFileFilter.Type;
@@ -66,7 +68,7 @@ public class FileBackend implements IBackend {
 		for (File file : files) {
 			//file.delete();
 			configFile = YamlConfiguration.loadConfiguration(file);
-			name = configFile.getName().toLowerCase();
+			name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
 			group = GroupHandler.getInstance().getGroup(name);
 			values.put("permissions", GroupHandler.getInstance().getGroupPermissions(name));
 			values.put("info", group.getInfos());
@@ -74,6 +76,7 @@ public class FileBackend implements IBackend {
 			values.put("worlds", group.getAllWorldPermissions());
 			values.put("promoteTo", group.getPromoteTo());
 			values.put("demoteTo", group.getDemoteTo());
+			configFile.options().pathSeparator('/');
 			configFile.addDefaults(values);
 			configFile.options().copyDefaults(true);
 			try {
@@ -90,11 +93,12 @@ public class FileBackend implements IBackend {
 		for (File file : files) {
 			//file.delete();
 			configFile = YamlConfiguration.loadConfiguration(file);
-			name = configFile.getName();
+			name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
 			values.put("permissions", PlayerHandler.getInstance().getPlayer(name).getPermissions());
 			values.put("info", PlayerHandler.getInstance().getPlayer(name).getInfos());
 			values.put("worlds", PlayerHandler.getInstance().getPlayer(name).getAllWorldPermissions());
 			values.put("groups", PlayerHandler.getInstance().getPlayer(name).getGroups());
+			configFile.options().pathSeparator('/');
 			configFile.addDefaults(values);
 			configFile.options().copyDefaults(true);
 			try {
@@ -127,20 +131,25 @@ public class FileBackend implements IBackend {
 		Map<String, Boolean> worldPerm = new HashMap<String, Boolean>();
 		Map<String, String> info = new HashMap<String, String>();
 		for (File file : files) {
-			configFile = YamlConfiguration.loadConfiguration(file);
+			worldPerm.clear();
+			perms.clear();
+			worldPerm.clear();
+			info.clear();
+			configFile =  new YamlConfiguration();
+			configFile.options().pathSeparator('/');
+			try {
+				configFile.load(file);
+			} catch (Exception e) {
+				DebugLog.INSTANCE.log(Level.SEVERE, "Failure while loadig the following group file:" + file.getName(), e);
+			}
 			rank = configFile.getInt("rank");
-			name = configFile.getName().toLowerCase();
+			name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
 			promoteTo = configFile.getString("promoteTo");
 			demoteTo = configFile.getString("demoteTo");
 			inheritance = configFile.getStringList("inheritance");
 			sec = configFile.getConfigurationSection("permissions");
-			for (Map.Entry<String, Object> entry : sec.getValues(false).entrySet()) {
-				try {
-					perms.put(entry.getKey(),(Boolean) entry.getValue());
-				} catch (ClassCastException ex) {
-					DebugLog.INSTANCE.warning("Could not read permission entry '" + entry.getKey() 
-							+ "' from group: " + name);
-				}
+			for (String entry : sec.getKeys(false)) {
+				perms.put(entry, sec.getBoolean(entry));
 			}
 			sec = configFile.getConfigurationSection("info");
 			for (String entry : sec.getKeys(false)) {
@@ -148,13 +157,8 @@ public class FileBackend implements IBackend {
 			}
 			sec = configFile.getConfigurationSection("worlds");
 			for (String w : sec.getKeys(false)) {
-				for (Map.Entry<String, Object> entry : sec.getValues(false).entrySet()) {
-					try {
-						worldPerm.put(entry.getKey(), (Boolean) entry.getValue());
-					} catch (ClassCastException ex) {
-						DebugLog.INSTANCE.warning("Could not read permission entry '" + entry.getKey() 
-								+ "' from world " + w + "in group: " + name);
-					}
+				for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
+					worldPerm.put(entry, sec.getBoolean(w + "/" + entry));
 				}
 				worldPerms.put(w, worldPerm);
 			}
@@ -166,31 +170,31 @@ public class FileBackend implements IBackend {
 		files = filter.getFiles(new File(path + File.separator + "players"),
 				filter.new PatternFilter(Type.FILE, ".yml"), true);
 		for (File file : files) {
-			configFile = YamlConfiguration.loadConfiguration(file);
-			name = file.getName().toLowerCase();
+			worldPerm.clear();
+			perms.clear();
+			worldPerm.clear();
+			info.clear();
+			configFile = new YamlConfiguration();
+			configFile.options().pathSeparator('/');
+			try {
+				configFile.load(file);
+			} catch (Exception e) {
+				DebugLog.INSTANCE.log(Level.SEVERE, "Failure while loadig the following player file:" + file.getName(), e);
+			}
+			name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
 			groups = configFile.getStringList("groups");
 			sec = configFile.getConfigurationSection("info");
 			for (String entry : sec.getKeys(false)) {
 				info.put(entry, sec.getString(entry));
 			}
 			sec = configFile.getConfigurationSection("permissions");
-			for (Map.Entry<String, Object> entry : sec.getValues(false).entrySet()) {
-				try {
-					perms.put(entry.getKey(),(Boolean) entry.getValue());
-				} catch (ClassCastException ex) {
-					DebugLog.INSTANCE.warning("Could not read permission entry '" + entry.getKey() 
-							+ "' from player: " + name);
-				}
+			for (String entry : sec.getKeys(false)) {
+				perms.put(entry, sec.getBoolean(entry));
 			}
 			sec = configFile.getConfigurationSection("worlds");
 			for (String w : sec.getKeys(false)) {
-				for (Map.Entry<String, Object> entry : sec.getValues(false).entrySet()) {
-					try {
-						worldPerm.put(entry.getKey(), (Boolean) entry.getValue());
-					} catch (ClassCastException ex) {
-						DebugLog.INSTANCE.warning("Could not read permission entry '" + entry.getKey() 
-								+ "' from world " + w + "from player: " + name);
-					}
+				for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
+					worldPerm.put(entry, sec.getBoolean(w + "/" + entry));
 				}
 				worldPerms.put(w, worldPerm);
 			}
@@ -209,19 +213,121 @@ public class FileBackend implements IBackend {
 		GroupHandler.getInstance().resetHandler();
 		load();
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see de.Lathanael.AdminPerms.Backend.IBackend#save(java.lang.String)
+	 */
 	@Override
 	public void save(final String playerName) {
-		// TODO Auto-generated method stub
-		
+		YamlConfiguration configFile;
+		Map<String, Object> values = new HashMap<String, Object>();
+		File file = new File(Main.getInstance().getDataFolder() + File.separator + "players", playerName.toLowerCase() + ".yml");
+		if (!file.exists()) {
+			createDefaultPlayerEntry(playerName);
+		}
+		configFile = new YamlConfiguration();
+		configFile.options().pathSeparator('/');
+		configFile = YamlConfiguration.loadConfiguration(file);
+		String name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
+		values.put("permissions", PlayerHandler.getInstance().getPlayer(name).getPermissions());
+		values.put("info", PlayerHandler.getInstance().getPlayer(name).getInfos());
+		values.put("worlds", PlayerHandler.getInstance().getPlayer(name).getAllWorldPermissions());
+		values.put("groups", PlayerHandler.getInstance().getPlayer(name).getGroups());
+		configFile.options().pathSeparator('/');
+		configFile.addDefaults(values);
+		configFile.options().copyDefaults(true);
+		try {
+			configFile.save(file);
+		} catch (IOException e) {
+			DebugLog.INSTANCE.log(Level.SEVERE, "Failure while saving file for player: " + name, e);
+			Main.getInstance().getLogger().severe("Failure while saving file for player: " + name);
+			Main.getInstance().getLogger().severe("Cause: " + e.getCause());
+			Main.getInstance().getLogger().severe("For exact cause refer to the debug.log");
+		}
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see de.Lathanael.AdminPerms.Backend.IBackend#load(java.lang.String)
+	 */
 	@Override
 	public void load(final String playerName) {
-		// TODO Auto-generated method stub
+		YamlConfiguration configFile;
+		ConfigurationSection sec;
+		Map<String, Boolean> perms = new HashMap<String, Boolean>();
+		Map<String, Map<String, Boolean>> worldPerms = new HashMap<String, Map<String, Boolean>>();
+		Map<String, Boolean> worldPerm = new HashMap<String, Boolean>();
+		Map<String, String> info = new HashMap<String, String>();
+		List<String> groups;
+		File file = new File(Main.getInstance().getDataFolder() + File.separator + "players", playerName.toLowerCase() + ".yml");
+		if (!file.exists()) {
+			createDefaultPlayerEntry(playerName);
+		}
+		configFile = new YamlConfiguration();
+		configFile.options().pathSeparator('/');
+		try {
+			configFile.load(file);
+		} catch (Exception e) {
+			DebugLog.INSTANCE.log(Level.SEVERE, "Failure while loadig the following player file:" + file.getName(), e);
+			return;
+		}
+		String name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
+		groups = configFile.getStringList("groups");
+		sec = configFile.getConfigurationSection("info");
+		for (String entry : sec.getKeys(false)) {
+			info.put(entry, sec.getString(entry));
+		}
+		sec = configFile.getConfigurationSection("permissions");
+		for (String entry : sec.getKeys(false)) {
+			perms.put(entry, sec.getBoolean(entry));
+		}
+		sec = configFile.getConfigurationSection("worlds");
+		for (String w : sec.getKeys(false)) {
+			for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
+				worldPerm.put(entry, sec.getBoolean(w + "/" + entry));
+			}
+			worldPerms.put(w, worldPerm);
+		}
+		PlayerHandler.getInstance().addPlayer(new PermPlayer(name, perms, groups, info, worldPerms));
 		
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see de.Lathanael.AdminPerms.Backend.IBackend#reload(java.lang.String)
+	 */
 	@Override
 	public void reload(final String playerName) {
 		save(playerName);
 		load(playerName);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see de.Lathanael.AdminPerms.Backend.IBackend#createDefaultPlayerEntry(org.bukkit.entity.Player)
+	 */
+	@Override
+	public void createDefaultPlayerEntry(final Player player) {
+		createDefaultPlayerEntry(player.getName());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see de.Lathanael.AdminPerms.Backend.IBackend#createDefaultPlayerEntry(java.lang.String)
+	 */
+	@Override
+	public void createDefaultPlayerEntry(final String playerName) {
+		YamlConfiguration configFile =  new YamlConfiguration();
+		configFile.options().pathSeparator('/');
+		try {
+			configFile.load(Main.getInstance().getResource("defaultPlayer.yml"));
+			File file = new File(Main.getInstance().getDataFolder() + File.separator + "players", playerName.toLowerCase() + ".yml");
+			file.createNewFile();
+			configFile.save(file);
+		} catch (Exception e) {
+			DebugLog.INSTANCE.log(Level.SEVERE, "Failure while creating the default player file for: " + playerName, e);
+			return;
+		}
 	}
 }
