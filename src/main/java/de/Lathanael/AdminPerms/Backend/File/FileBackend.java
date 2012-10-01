@@ -142,10 +142,10 @@ public class FileBackend implements IBackend {
 			} catch (Exception e) {
 				DebugLog.INSTANCE.log(Level.SEVERE, "Failure while loadig the following group file:" + file.getName(), e);
 			}
-			rank = configFile.getInt("rank");
+			rank = configFile.getInt("rank", 0);
 			name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
-			promoteTo = configFile.getString("promoteTo");
-			demoteTo = configFile.getString("demoteTo");
+			promoteTo = configFile.getString("promoteTo", "");
+			demoteTo = configFile.getString("demoteTo", "");
 			inheritance = configFile.getStringList("inheritance");
 			sec = configFile.getConfigurationSection("permissions");
 			for (String entry : sec.getKeys(false)) {
