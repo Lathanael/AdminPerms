@@ -86,6 +86,8 @@ public class Main extends JavaPlugin {
 		final String backend = ConfigEnum.BACKEND.getString();
 		if (backend.equalsIgnoreCase("yml")) {
 			PermissionsHandler.getInstance().setBackend(new FileBackend(getDataFolder().getPath()));
+		} else if (backend.equalsIgnoreCase("sqlite")) {
+			// TODO: sql code
 		} else if (backend.equalsIgnoreCase("mysql")) {
 			// TODO: sql code
 		} else {
