@@ -85,7 +85,7 @@ public class AdminPermsPlayerListener implements Listener {
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if (event.isCancelled()) return;
-		if (!event.getPlayer().hasPermission("permissions.build")) {
+		if (!event.getPlayer().hasPermission("adminperms.build")) {
 			bother(event.getPlayer());
 			event.setCancelled(true);
 		}
@@ -94,7 +94,7 @@ public class AdminPermsPlayerListener implements Listener {
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (event.isCancelled()) return;
-		if (!event.getPlayer().hasPermission("permissions.build")) {
+		if (!event.getPlayer().hasPermission("adminperms.build")) {
 			bother(event.getPlayer());
 			event.setCancelled(true);
 		}
