@@ -41,6 +41,10 @@ public class CommandsHandler implements CommandExecutor {
 	private static CommandsHandler instance = new CommandsHandler();
 	private HashMap<Command, BaseCommand> cmdMap = new HashMap<Command, BaseCommand>();
 
+	public static CommandsHandler getInstance() {
+		return instance;
+	}
+	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmdMap.get(cmd) != null) {
 			return executeCommand(sender, cmdMap.get(cmd), args);
@@ -48,7 +52,7 @@ public class CommandsHandler implements CommandExecutor {
 		return false;
 	}
 	private boolean executeCommand(CommandSender sender, BaseCommand cmd, String[] args) {
-		if (checkPermissions(sender, cmd.permNode)) {
+		if (cmd.checkPerm(sender)) {
 			if (cmd.checkArgs(args)) {
 				cmd.execute(sender, args);
 				return true;

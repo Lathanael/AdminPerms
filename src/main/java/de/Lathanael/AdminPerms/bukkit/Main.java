@@ -50,7 +50,6 @@ import java.util.logging.Level;
 public class Main extends JavaPlugin {
 
 	private AdminPermsPlayerListener playerListener = new AdminPermsPlayerListener();
-	private CommandsHandler commandExecutor = new CommandsHandler();
 	private File configFile;
 	private static Main instance;;
 
@@ -100,13 +99,13 @@ public class Main extends JavaPlugin {
 		} else {
 			PermissionsHandler.getInstance().setBackend(new FileBackend(getDataFolder().getPath()));
 		}
-		commandExecutor.registerCommand(Check.class);
-		commandExecutor.registerCommand(Dump.class);
-		commandExecutor.registerCommand(Info.class);
-		commandExecutor.registerCommand(Rank.class);
-		commandExecutor.registerCommand(Reload.class);
-		commandExecutor.registerCommand(GroupCommand.class);
-		commandExecutor.registerCommand(PlayerCommand.class);
+		CommandsHandler.getInstance().registerCommand(Check.class);
+		CommandsHandler.getInstance().registerCommand(Dump.class);
+		CommandsHandler.getInstance().registerCommand(Info.class);
+		CommandsHandler.getInstance().registerCommand(Rank.class);
+		CommandsHandler.getInstance().registerCommand(Reload.class);
+		CommandsHandler.getInstance().registerCommand(GroupCommand.class);
+		CommandsHandler.getInstance().registerCommand(PlayerCommand.class);
 		getServer().getPluginManager().registerEvents(playerListener, this);
 		PermissionsHandler.getInstance().registerPlayer(getServer().getOnlinePlayers());
 		int count = getServer().getOnlinePlayers().length;
