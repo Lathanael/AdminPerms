@@ -52,6 +52,7 @@ permissions:
     default: op
     description: Allows use of all AdminPerms administration commands.
     children:
+      adminperms.build: true
       adminperms.reload: true
       adminperms.check: true
       adminperms.info: true

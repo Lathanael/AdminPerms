@@ -1,5 +1,5 @@
 permissions:
-    permissions.*: true
+    adminperms.*: true
 info:
     prefix: '[Noob]'
 rank: 0
@@ -7,6 +7,6 @@ promoteTo: ''
 demoteTo: 'default'
 worlds:
     creative:
-        permissions.build: true
+        adminperms.build: true
 inheritance: 
 - default
