@@ -25,7 +25,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.Lathanael.AdminPerms.Backend.File.FileBackend;
+import de.Lathanael.AdminPerms.Command.Check;
 import de.Lathanael.AdminPerms.Command.CommandsHandler;
+import de.Lathanael.AdminPerms.Command.Dump;
+import de.Lathanael.AdminPerms.Command.GroupCommand;
+import de.Lathanael.AdminPerms.Command.Info;
+import de.Lathanael.AdminPerms.Command.PlayerCommand;
+import de.Lathanael.AdminPerms.Command.Rank;
+import de.Lathanael.AdminPerms.Command.Reload;
 import de.Lathanael.AdminPerms.Listener.AdminPermsPlayerListener;
 import de.Lathanael.AdminPerms.Logging.DebugLog;
 import de.Lathanael.AdminPerms.Permissions.PermissionsHandler;
@@ -93,7 +100,13 @@ public class Main extends JavaPlugin {
 		} else {
 			PermissionsHandler.getInstance().setBackend(new FileBackend(getDataFolder().getPath()));
 		}
-		getCommand("permissions").setExecutor(commandExecutor);
+		commandExecutor.registerCommand(Check.class);
+		commandExecutor.registerCommand(Dump.class);
+		commandExecutor.registerCommand(Info.class);
+		commandExecutor.registerCommand(Rank.class);
+		commandExecutor.registerCommand(Reload.class);
+		commandExecutor.registerCommand(GroupCommand.class);
+		commandExecutor.registerCommand(PlayerCommand.class);
 		getServer().getPluginManager().registerEvents(playerListener, this);
 		PermissionsHandler.getInstance().registerPlayer(getServer().getOnlinePlayers());
 		int count = getServer().getOnlinePlayers().length;
