@@ -61,13 +61,19 @@ public class FileBackend implements IBackend {
 		SubDirFileFilter filter = new SubDirFileFilter();
 		List<File> files = filter.getFiles(new File(path + File.separator + "groups"),
 				filter.new PatternFilter(Type.FILE, ".yml"), true);
-		YamlConfiguration configFile;
+		YamlConfiguration configFile = new YamlConfiguration();
+		configFile.options().pathSeparator('/');
 		String name;
 		Map<String, Object> values = new HashMap<String, Object>();
 		Group group;
 		for (File file : files) {
 			//file.delete();
-			configFile = YamlConfiguration.loadConfiguration(file);
+			try {
+				configFile.load(file);
+			} catch (Exception e) {
+				DebugLog.INSTANCE.log(Level.SEVERE, "Failure while loadig the following group file:" + file.getName(), e);
+				return;
+			}
 			name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
 			group = GroupHandler.getInstance().getGroup(name);
 			values.put("permissions", GroupHandler.getInstance().getGroupPermissions(name));
@@ -92,7 +98,12 @@ public class FileBackend implements IBackend {
 				filter.new PatternFilter(Type.FILE, ".yml"), true);
 		for (File file : files) {
 			//file.delete();
-			configFile = YamlConfiguration.loadConfiguration(file);
+			try {
+				configFile.load(file);
+			} catch (Exception e) {
+				DebugLog.INSTANCE.log(Level.SEVERE, "Failure while loadig the following player file:" + file.getName(), e);
+				return;
+			}
 			name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
 			values.put("permissions", PlayerHandler.getInstance().getPlayer(name).getPermissions());
 			values.put("info", PlayerHandler.getInstance().getPlayer(name).getInfos());
@@ -228,7 +239,12 @@ public class FileBackend implements IBackend {
 		}
 		configFile = new YamlConfiguration();
 		configFile.options().pathSeparator('/');
-		configFile = YamlConfiguration.loadConfiguration(file);
+		try {
+			configFile.load(file);
+		} catch (Exception e) {
+			DebugLog.INSTANCE.log(Level.SEVERE, "Failure while loadig the following player file:" + file.getName(), e);
+			return;
+		}
 		String name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
 		values.put("permissions", PlayerHandler.getInstance().getPlayer(name).getPermissions());
 		values.put("info", PlayerHandler.getInstance().getPlayer(name).getInfos());
@@ -320,13 +336,15 @@ public class FileBackend implements IBackend {
 	public void createDefaultPlayerEntry(final String playerName) {
 		YamlConfiguration configFile =  new YamlConfiguration();
 		configFile.options().pathSeparator('/');
+		final String filePath = Main.getInstance().getDataFolder() + File.separator + "players" + File.separator + playerName.toLowerCase() + ".yml";
 		try {
 			configFile.load(Main.getInstance().getResource("defaultPlayer.yml"));
-			File file = new File(Main.getInstance().getDataFolder() + File.separator + "players", playerName.toLowerCase() + ".yml");
+			File file = new File(filePath);
 			file.createNewFile();
 			configFile.save(file);
 		} catch (Exception e) {
 			DebugLog.INSTANCE.log(Level.SEVERE, "Failure while creating the default player file for: " + playerName, e);
+			DebugLog.INSTANCE.log(Level.SEVERE, "Path used: " + filePath);
 			return;
 		}
 	}
