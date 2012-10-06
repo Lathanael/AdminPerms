@@ -51,13 +51,13 @@ public class PlayerCommand extends BaseCommand {
 	@Override
 	public void execute(final CommandSender sender, final String[] args) {
 		final String cmd = args[0].toLowerCase();
-		final String player	= args[1];
+		final String player = args[1].toLowerCase();
 		
 		if (PlayerHandler.getInstance().getPlayer(player) == null) {
 			PlayerHandler.getInstance().addPlayer(player);
 		}
 		if (cmd.equals("groups") && checkPerm(sender, ".groups")) {
-			final Set<String> groups = PlayerHandler.getInstance().getPlayer(player.toLowerCase()).getGroups();
+			final Set<String> groups = PlayerHandler.getInstance().getPlayer(player).getGroups();
 			if (groups == null) {
 				sender.sendMessage(ChatColor.GOLD + player + ChatColor.AQUA
 						+ "is not member of any group!");
@@ -104,7 +104,7 @@ public class PlayerCommand extends BaseCommand {
 			}
 			list.addAll(groups);
 			PlayerHandler.getInstance().getPlayer(player).addGroups(groups);
-			PermissionsHandler.getInstance().refreshPermissions();
+			PermissionsHandler.getInstance().refreshPermissions(player);
 			msg = buildMessage(groups);
 			sender.sendMessage(ChatColor.AQUA + "The following group(s) have been added to "
 					+ ChatColor.GOLD + player + ChatColor.AQUA + ":");
@@ -132,7 +132,7 @@ public class PlayerCommand extends BaseCommand {
 			}
 			list.addAll(groups);
 			PlayerHandler.getInstance().getPlayer(player).removeGroups(groups);
-			PermissionsHandler.getInstance().refreshPermissions();
+			PermissionsHandler.getInstance().refreshPermissions(player);
 			msg = buildMessage(groups);
 			sender.sendMessage(ChatColor.AQUA + "The following group(s) have been removed from "
 					+ ChatColor.GOLD + player + ChatColor.AQUA + ":");
@@ -154,7 +154,7 @@ public class PlayerCommand extends BaseCommand {
 			} else {
 				PlayerHandler.getInstance().getPlayer(player).addOrChangePermission(perm, value);
 			}
-			PermissionsHandler.getInstance().refreshPermissions();
+			PermissionsHandler.getInstance().refreshPermissions(player);
 			sender.sendMessage(ChatColor.AQUA + "Player " + ChatColor.GOLD + player 
 					+ ChatColor.AQUA + " now has " + ChatColor.WHITE + perm + ChatColor.AQUA + " = "
 					+ ChatColor.WHITE + value + ChatColor.AQUA + ".");
@@ -174,7 +174,7 @@ public class PlayerCommand extends BaseCommand {
 			} else {
 				PlayerHandler.getInstance().getPlayer(player).removePermission(perm);
 			}
-			PermissionsHandler.getInstance().refreshPermissions();
+			PermissionsHandler.getInstance().refreshPermissions(player);
 			sender.sendMessage(ChatColor.AQUA + "Player " + ChatColor.WHITE + player + ChatColor.AQUA
 					+ " no longer has " + ChatColor.WHITE + perm + ChatColor.AQUA + " set.");
 		}

@@ -74,9 +74,6 @@ public class PermissionsHandler {
 			perms.createDefaultPlayerEntry(player);
 			perms.load(player.getName());
 		}
-		PermissionAttachment attachment = player.addAttachment(Main.getInstance());
-		permissions.put(player.getName().toLowerCase(), attachment);
-		calculateAttachment(player);
 		try {
 			replacePermissible.replacePermissible(player, new AdminPermsPermissible(player));
 		} catch (Exception e) {
@@ -86,6 +83,9 @@ public class PermissionsHandler {
 					+ " debug.log!");
 			DebugLog.INSTANCE.log(Level.SEVERE, "Could not inject AdminPerms permissible!", e);
 		}
+		PermissionAttachment attachment = player.addAttachment(Main.getInstance());
+		permissions.put(player.getName().toLowerCase(), attachment);
+		calculateAttachment(player);
 	}
 
 	public void unregisterPlayer(final Player[] players) {
@@ -122,8 +122,8 @@ public class PermissionsHandler {
 	}
 
 	public void refreshPermissions(final String player) {
-		perms.reload(player);
-		PermissionAttachment attachment = permissions.get(player);
+		perms.reload(player.toLowerCase());
+		PermissionAttachment attachment = permissions.get(player.toLowerCase());
 		for (String key : attachment.getPermissions().keySet()) {
 			attachment.unsetPermission(key);
 		}
@@ -137,7 +137,7 @@ public class PermissionsHandler {
 		PermissionAttachment attachment = permissions.get(player.getName().toLowerCase());
 		if (attachment == null) {
 			DebugLog.INSTANCE.warning("Calculating permissions on " + player.getName() 
-					+ ": attachment was null");
+					+ " failed: attachment was null");
 			return;
 		}
 		for (String key : attachment.getPermissions().keySet()) {
@@ -157,6 +157,10 @@ public class PermissionsHandler {
 	}
 	
 	public boolean hasFalsePerm(final Player player, final String permission) {
+		if (player == null)
+			return false;
+		if (PlayerHandler.getInstance().getPlayer(player) == null)
+			return false;
 		return PlayerHandler.getInstance().getPlayer(player).getCalculatedPerms()
 				.contains(permission.toLowerCase());
 	}

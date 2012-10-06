@@ -126,6 +126,7 @@ public class Main extends JavaPlugin {
 		if (count > 0) {
 			getLogger().info("Successfully unregistered " + count + " online players.");
 		}
+		PermissionsHandler.getInstance().getBackend().save();
 		getLogger().info("AdminPerms version " + getDescription().getVersion() + " successfully disabled.");
 	}
 
