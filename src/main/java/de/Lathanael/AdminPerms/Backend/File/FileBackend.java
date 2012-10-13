@@ -67,6 +67,7 @@ public class FileBackend implements IBackend {
 		Map<String, Object> values = new HashMap<String, Object>();
 		Group group;
 		for (File file : files) {
+			values.clear();
 			//file.delete();
 			try {
 				configFile.load(file);
@@ -96,7 +97,9 @@ public class FileBackend implements IBackend {
 		}
 		files = filter.getFiles(new File(path + File.separator + "players"),
 				filter.new PatternFilter(Type.FILE, ".yml"), true);
+		values.clear();
 		for (File file : files) {
+			values.clear();
 			//file.delete();
 			try {
 				configFile.load(file);
