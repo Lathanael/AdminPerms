@@ -3,6 +3,7 @@ main: de.Lathanael.AdminPerms.bukkit.Main
 version: ${project.version} (BUILD ${git.build.time})
 author: Lathanael
 authors: [Lathanael]
+load: STARTUP
 description: AdminPerms provides permissions in a simple true/false scheme and some additional player-metainformation
 
 commands:
