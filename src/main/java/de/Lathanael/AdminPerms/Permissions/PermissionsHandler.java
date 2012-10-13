@@ -124,6 +124,11 @@ public class PermissionsHandler {
 	public void refreshPermissions(final String player) {
 		perms.reload(player.toLowerCase());
 		PermissionAttachment attachment = permissions.get(player.toLowerCase());
+		if (attachment == null) {
+			DebugLog.INSTANCE.log(Level.WARNING, "Unable to find attachment for: " + player);
+			DebugLog.INSTANCE.log(Level.WARNING, "It is possible that the player does not exist!");
+			return;
+		}
 		for (String key : attachment.getPermissions().keySet()) {
 			attachment.unsetPermission(key);
 		}

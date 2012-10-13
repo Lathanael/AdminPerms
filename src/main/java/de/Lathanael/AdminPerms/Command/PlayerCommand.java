@@ -52,9 +52,11 @@ public class PlayerCommand extends BaseCommand {
 	public void execute(final CommandSender sender, final String[] args) {
 		final String cmd = args[0].toLowerCase();
 		final String player = args[1].toLowerCase();
-		
+		int count = 0;
 		if (PlayerHandler.getInstance().getPlayer(player) == null) {
-			PlayerHandler.getInstance().addPlayer(player);
+			sender.sendMessage(ChatColor.RED + "A player with the name " + ChatColor.AQUA
+					+ player + ChatColor.RED + " does not exist.");
+			return;
 		}
 		if (cmd.equals("groups") && checkPerm(sender, ".groups")) {
 			final Set<String> groups = PlayerHandler.getInstance().getPlayer(player).getGroups();
@@ -63,8 +65,8 @@ public class PlayerCommand extends BaseCommand {
 						+ "is not member of any group!");
 				return;
 			}
-			int count = 0;
-			String msg = buildMessage(groups);
+			
+			String msg = buildMessage(groups, count);
 			sender.sendMessage(ChatColor.GOLD + player + ChatColor.AQUA + "is in the following groups(" 
 						+ ChatColor.GOLD + count + ChatColor.AQUA + "):");
 			sender.sendMessage(ChatColor.AQUA + msg);
@@ -97,7 +99,7 @@ public class PlayerCommand extends BaseCommand {
 			groups.removeAll(inGroup);
 			String msg = "";
 			if (!inGroup.isEmpty()) {
-				msg = buildMessage(inGroup);
+				msg = buildMessage(inGroup, count);
 				sender.sendMessage(ChatColor.RED + "Player " + ChatColor.GOLD + player 
 						+ ChatColor.RED + " was already in the following group(s):");
 				sender.sendMessage(ChatColor.GRAY + msg);
@@ -105,7 +107,7 @@ public class PlayerCommand extends BaseCommand {
 			list.addAll(groups);
 			PlayerHandler.getInstance().getPlayer(player).addGroups(groups);
 			PermissionsHandler.getInstance().refreshPermissions(player);
-			msg = buildMessage(groups);
+			msg = buildMessage(groups, count);
 			sender.sendMessage(ChatColor.AQUA + "The following group(s) have been added to "
 					+ ChatColor.GOLD + player + ChatColor.AQUA + ":");
 			sender.sendMessage(ChatColor.GRAY + msg);
@@ -125,7 +127,7 @@ public class PlayerCommand extends BaseCommand {
 			groups.removeAll(inGroup);
 			String msg = "";
 			if (!inGroup.isEmpty()) {
-				msg = buildMessage(inGroup);
+				msg = buildMessage(inGroup, count);
 				sender.sendMessage(ChatColor.RED + "Player " + ChatColor.GOLD + player 
 						+ ChatColor.RED + " was not in the following group(s):");
 				sender.sendMessage(ChatColor.GRAY + msg);
@@ -133,7 +135,7 @@ public class PlayerCommand extends BaseCommand {
 			list.addAll(groups);
 			PlayerHandler.getInstance().getPlayer(player).removeGroups(groups);
 			PermissionsHandler.getInstance().refreshPermissions(player);
-			msg = buildMessage(groups);
+			msg = buildMessage(groups, count);
 			sender.sendMessage(ChatColor.AQUA + "The following group(s) have been removed from "
 					+ ChatColor.GOLD + player + ChatColor.AQUA + ":");
 			sender.sendMessage(ChatColor.GRAY + msg);
@@ -213,18 +215,20 @@ public class PlayerCommand extends BaseCommand {
 		return;
 	}
 	
-	private String buildMessage (final List<String> list) {
+	private String buildMessage (final List<String> list, int count) {
 		String msg = "";
 		for (String s : list) {
-			msg += ", " + s;
+			msg += s + ", " ;
+			count++;
 		}
 		return msg.substring(0, msg.length() - 2);
 	}
 	
-	private String buildMessage (final Set<String> list) {
+	private String buildMessage (final Set<String> list, int count) {
 		String msg = "";
 		for (String s : list) {
-			msg += ", " + s;
+			msg += s + ", " ;
+			count++;
 		}
 		return msg.substring(0, msg.length() - 2);
 	}

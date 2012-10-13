@@ -145,7 +145,7 @@ public class GroupCommand extends BaseCommand {
 	private String buildMessage (final Set<String> list) {
 		String msg = "";
 		for (String s : list) {
-			msg += ", " + s;
+			msg += s + ", ";
 		}
 		return msg.substring(0, msg.length() - 2);
 	}
