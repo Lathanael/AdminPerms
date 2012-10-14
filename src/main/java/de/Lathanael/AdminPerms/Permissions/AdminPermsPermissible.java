@@ -24,6 +24,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
 import org.bukkit.permissions.Permission;
 
+import de.Lathanael.AdminPerms.Logging.DebugLog;
+import de.Lathanael.AdminPerms.bukkit.ConfigEnum;
+
 /**
  * @author Lathanael (aka Philippe Leipold)
  *
@@ -40,9 +43,15 @@ public class AdminPermsPermissible extends PermissibleBase {
 
 	@Override
 	public boolean hasPermission(final String permission) {
-		if (PermissionsHandler.getInstance().hasFalsePerm(player, permission))
+		if (ConfigEnum.VERBOSE_LOG.getBoolean()) {
+			DebugLog.INSTANCE.fine("Checking " + permission + " for player " + player.getName());
+		}
+		if (PermissionsHandler.getInstance().hasFalsePerm(player, permission)) {
+			if (ConfigEnum.VERBOSE_LOG.getBoolean()) {
+				DebugLog.INSTANCE.fine("Found false permission!");
+			}
 			return false;
-		else
+		} else
 			return super.hasPermission(permission); 
 	}
 	

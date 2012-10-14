@@ -22,6 +22,7 @@ package de.Lathanael.AdminPerms.Backend.File;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,31 +62,30 @@ public class FileBackend implements IBackend {
 		SubDirFileFilter filter = new SubDirFileFilter();
 		List<File> files = filter.getFiles(new File(path + File.separator + "groups"),
 				filter.new PatternFilter(Type.FILE, ".yml"), true);
-		YamlConfiguration configFile = new YamlConfiguration();
-		configFile.options().pathSeparator('/');
+		YamlConfiguration configFile;		
 		String name;
-		Map<String, Object> values = new HashMap<String, Object>();
 		Group group;
 		for (File file : files) {
-			values.clear();
-			//file.delete();
-			try {
-				configFile.load(file);
-			} catch (Exception e) {
-				DebugLog.INSTANCE.log(Level.SEVERE, "Failure while loadig the following group file:" + file.getName(), e);
-				return;
-			}
-			name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
-			group = GroupHandler.getInstance().getGroup(name);
-			values.put("permissions", GroupHandler.getInstance().getGroupPermissions(name));
-			values.put("info", group.getInfos());
-			values.put("inheritance", group.getInheritance());
-			values.put("worlds", group.getAllWorldPermissions());
-			values.put("promoteTo", group.getPromoteTo());
-			values.put("demoteTo", group.getDemoteTo());
+			configFile = new YamlConfiguration();
 			configFile.options().pathSeparator('/');
-			configFile.addDefaults(values);
-			configFile.options().copyDefaults(true);
+			name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
+			if (GroupHandler.getInstance().getGroup(name) == null)
+				continue;
+			group = GroupHandler.getInstance().getGroup(name);
+			for (Map.Entry<String, String> entry : group.getInfos().entrySet()) {
+				configFile.set("info" + "/" + entry.getKey(), entry.getValue());
+			}
+			for (Map.Entry<String, Boolean> entry : GroupHandler.getInstance().getGroupPermissions(name).entrySet()) {
+				configFile.set("permissions" + "/" + entry.getKey(), entry.getValue());
+			}
+			for (Map.Entry<String, Map<String, Boolean>> entry : group.getAllWorldPermissions().entrySet()) {
+				for (Map.Entry<String, Boolean> entry2 : entry.getValue().entrySet()) {
+					configFile.set("worlds" + "/" + entry.getKey() + "/" + entry2.getKey() , entry2.getValue());
+				}
+			}			
+			configFile.set("inheritance", group.getInheritance());
+			configFile.set("promoteTo", group.getPromoteTo());
+			configFile.set("demoteTo", group.getDemoteTo());
 			try {
 				configFile.save(file);
 			} catch (IOException e) {
@@ -97,24 +97,22 @@ public class FileBackend implements IBackend {
 		}
 		files = filter.getFiles(new File(path + File.separator + "players"),
 				filter.new PatternFilter(Type.FILE, ".yml"), true);
-		values.clear();
 		for (File file : files) {
-			values.clear();
-			//file.delete();
-			try {
-				configFile.load(file);
-			} catch (Exception e) {
-				DebugLog.INSTANCE.log(Level.SEVERE, "Failure while loadig the following player file:" + file.getName(), e);
-				return;
-			}
-			name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
-			values.put("permissions", PlayerHandler.getInstance().getPlayer(name).getPermissions());
-			values.put("info", PlayerHandler.getInstance().getPlayer(name).getInfos());
-			values.put("worlds", PlayerHandler.getInstance().getPlayer(name).getAllWorldPermissions());
-			values.put("groups", PlayerHandler.getInstance().getPlayer(name).getGroups());
+			configFile = new YamlConfiguration();
 			configFile.options().pathSeparator('/');
-			configFile.addDefaults(values);
-			configFile.options().copyDefaults(true);
+			name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
+			for (Map.Entry<String, String> entry : PlayerHandler.getInstance().getPlayer(name).getInfos().entrySet()) {
+				configFile.set("info/" + entry.getKey(), entry.getValue());
+			}
+			for (Map.Entry<String, Boolean> entry : PlayerHandler.getInstance().getPlayer(name).getPermissions().entrySet()) {
+				configFile.set("permissions/" + entry.getKey(), entry.getValue());
+			}
+			for (Map.Entry<String, Map<String, Boolean>> entry : PlayerHandler.getInstance().getPlayer(name).getAllWorldPermissions().entrySet()) {
+				for (Map.Entry<String, Boolean> entry2 : entry.getValue().entrySet()) {
+					configFile.set("worlds/" + entry.getKey() + "/" + entry2.getKey() , entry2.getValue());
+				}
+			}
+			configFile.set("groups", new ArrayList<String>(PlayerHandler.getInstance().getPlayer(name).getGroups()));
 			try {
 				configFile.save(file);
 			} catch (IOException e) {
@@ -242,20 +240,20 @@ public class FileBackend implements IBackend {
 		}
 		configFile = new YamlConfiguration();
 		configFile.options().pathSeparator('/');
-		try {
-			configFile.load(file);
-		} catch (Exception e) {
-			DebugLog.INSTANCE.log(Level.SEVERE, "Failure while loadig the following player file:" + file.getName(), e);
-			return;
-		}
+		values.clear();
 		String name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
-		values.put("permissions", PlayerHandler.getInstance().getPlayer(name).getPermissions());
-		values.put("info", PlayerHandler.getInstance().getPlayer(name).getInfos());
-		values.put("worlds", PlayerHandler.getInstance().getPlayer(name).getAllWorldPermissions());
-		values.put("groups", PlayerHandler.getInstance().getPlayer(name).getGroups());
-		configFile.options().pathSeparator('/');
-		configFile.addDefaults(values);
-		configFile.options().copyDefaults(true);
+		for (Map.Entry<String, String> entry : PlayerHandler.getInstance().getPlayer(name).getInfos().entrySet()) {
+			configFile.set("info/" + entry.getKey(), entry.getValue());
+		}
+		for (Map.Entry<String, Boolean> entry : PlayerHandler.getInstance().getPlayer(name).getPermissions().entrySet()) {
+			configFile.set("permissions/" + entry.getKey(), entry.getValue());
+		}
+		for (Map.Entry<String, Map<String, Boolean>> entry : PlayerHandler.getInstance().getPlayer(name).getAllWorldPermissions().entrySet()) {
+			for (Map.Entry<String, Boolean> entry2 : entry.getValue().entrySet()) {
+				configFile.set("worlds/" + entry.getKey() + "/" + entry2.getKey() , entry2.getValue());
+			}
+		}
+		configFile.set("groups", new ArrayList<String>(PlayerHandler.getInstance().getPlayer(name).getGroups()));
 		try {
 			configFile.save(file);
 		} catch (IOException e) {

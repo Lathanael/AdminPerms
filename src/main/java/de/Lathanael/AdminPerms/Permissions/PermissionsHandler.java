@@ -96,6 +96,7 @@ public class PermissionsHandler {
 
 	public void unregisterPlayer(final Player player) {
 		if (permissions.containsKey(player.getName().toLowerCase())) {
+			perms.save(player.getName().toLowerCase());
 			try {
 				player.removeAttachment(permissions.get(player.getName().toLowerCase()));
 			}

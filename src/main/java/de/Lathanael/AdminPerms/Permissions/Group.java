@@ -156,14 +156,14 @@ public class Group {
 	}
 	
 	public void removePermission(final String permission) {
-		permissions.remove(permission);
+		permissions.put(permission, null);
 	}
 	
 	public void removeWorldPermission(final String permission, final String world) {
 		if (worldPermissions.get(world) == null) {
 			return;
 		}
-		worldPermissions.get(world).remove(permission);
+		worldPermissions.get(world).put(permission, null);
 	}
 	
 	public void copyNotExistingPermissions(final Map<String, Boolean> permissions) {
