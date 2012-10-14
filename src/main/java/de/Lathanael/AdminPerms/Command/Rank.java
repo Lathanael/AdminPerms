@@ -23,6 +23,10 @@ package de.Lathanael.AdminPerms.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
+
+import de.Lathanael.AdminPerms.Logging.DebugLog;
+import de.Lathanael.AdminPerms.Permissions.PermPlayer;
 import de.Lathanael.AdminPerms.Permissions.PermissionsHandler;
 import de.Lathanael.AdminPerms.Permissions.PlayerHandler;
 
@@ -38,7 +42,8 @@ public class Rank extends BaseCommand {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.Lathanael.AdminPerms.Command.BaseCommand#execute(org.bukkit.command.CommandSender, java.lang.String[])
+	 * @see de.Lathanael.AdminPerms.Command.BaseCommand#execute(org.bukkit.command.CommandSender,
+	 * java.lang.String[])
 	 */
 	@Override
 	public void execute(final CommandSender sender, final String[] args) {
@@ -49,26 +54,44 @@ public class Rank extends BaseCommand {
 			console = true;
 		}
 		if (PlayerHandler.getInstance().getPlayer(player) == null) {
-			PlayerHandler.getInstance().addPlayer(player);
+			sender.sendMessage(ChatColor.RED + "A player with the name " + ChatColor.AQUA
+					+ player + ChatColor.RED + " does not exist.");
+			return;
 		}
-		
+		if (!console) {
+			if (PlayerHandler.getInstance().getPlayer(((Player) sender)
+					.getName().toLowerCase()) == null) {
+				sender.sendMessage(ChatColor.RED + "Error while performing the rank command."
+						+ " Refer to the debug.log.");
+				DebugLog.INSTANCE.warning("There was no PermPlayer object for a player named "
+						+ ((Player) sender).getName());
+				DebugLog.INSTANCE.warning("Possible error in the register process!");
+				return;
+			}
+		}
+		final PermPlayer p1 = PlayerHandler.getInstance().getPlayer(((Player) sender)
+				.getName().toLowerCase());
+		final PermPlayer p2 = PlayerHandler.getInstance().getPlayer(player);
 		if (stat.contains("pro")) {
 			if (console) {
-				PlayerHandler.getInstance().getPlayer(player).promote();
+				p2.promote();
 				PermissionsHandler.getInstance().refreshPermissions(player);
-			} else if (sender.hasPermission(permNode + ".promote")){
-				PlayerHandler.getInstance().getPlayer(player).demote();
+			} else if (sender.hasPermission(permNode + ".promote") 
+					&& p1.getHighestGroup().getRank() >= p2.getHighestGroup().getRank()){
+				p2.promote();
 				PermissionsHandler.getInstance().refreshPermissions(player);
 			}
 		} else if (stat.contains("de")) {
 			if (console) {
-				PlayerHandler.getInstance().getPlayer(player).demote();
+				p2.demote();
 				PermissionsHandler.getInstance().refreshPermissions(player);
-			} else if (sender.hasPermission(permNode + ".demote")){
-				PlayerHandler.getInstance().getPlayer(player).demote();
+			} else if (sender.hasPermission(permNode + ".demote") 
+					&& p1.getHighestGroup().getRank() >= p2.getHighestGroup().getRank()){
+				p2.demote();
 				PermissionsHandler.getInstance().refreshPermissions(player);
 			}
-			sender.sendMessage(ChatColor.GREEN + "Player " + ChatColor.WHITE + player + ChatColor.GREEN + " has been promoted.");	
+			sender.sendMessage(ChatColor.GREEN + "Player " + ChatColor.WHITE + player
+					+ ChatColor.GREEN + " has been promoted.");	
 		}
 		PermissionsHandler.getInstance().refreshPermissions(player);	
 	}
