@@ -10,3 +10,4 @@ worlds:
         adminperms.build: true
 inheritance: 
 - default
+time: -1

@@ -48,7 +48,8 @@ public enum ConfigEnum {
 	CONVERT("data.convertInto", "yml"),
 	BUILD("messages.build", ChatColor.RED + "You do not have permission to build here."),
 	FIRSTSTART("firstStart", true),
-	DEFAULT_GROUP("defaultGroup", "%rank%");
+	DEFAULT_GROUP("defaultGroup", "%rank%"),
+	AUTO_RANK("autoTimeRank", false);
 
 	private final String confVal;
 	private final Object defaultVal;

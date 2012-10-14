@@ -9,3 +9,4 @@ worlds:
     creative:
         adminperms.build: true
 inheritance: []
+time: -1
