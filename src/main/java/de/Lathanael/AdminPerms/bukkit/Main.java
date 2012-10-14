@@ -68,17 +68,20 @@ public class Main extends JavaPlugin {
 			File groupFolder = new File(getDataFolder() + File.separator + "groups");
 			playerFolder.mkdirs();
 			groupFolder.mkdirs();
-			YamlConfiguration file1 = new YamlConfiguration(), file2 = new YamlConfiguration(), file3 = new YamlConfiguration();
+			YamlConfiguration file1 = new YamlConfiguration(), file2 = new YamlConfiguration(), file3 = new YamlConfiguration(), file4 = new YamlConfiguration();
 			file1.options().pathSeparator('/');
 			file2.options().pathSeparator('/');
 			file3.options().pathSeparator('/');
+			file4.options().pathSeparator('/');
 			ConfigEnum.FIRSTSTART.setValue(false);
 			try {
 				file1.load(getResource("default.yml"));
 				file2.load(getResource("admin.yml"));
 				file3.load(getResource("coolplayer.yml"));
+				file4.load(getResource("vip.yml"));
 				file1.save(new File(groupFolder, "default.yml"));
 				file2.save(new File(groupFolder, "admin.yml"));
+				file4.save(new File(groupFolder, "vip.yml"));
 				file3.save(new File(playerFolder, "coolplayer.yml"));
 				ConfigEnum.save();
 			} catch (IOException e) {
