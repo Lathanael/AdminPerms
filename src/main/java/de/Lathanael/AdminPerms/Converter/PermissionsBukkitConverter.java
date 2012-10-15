@@ -93,15 +93,15 @@ public class PermissionsBukkitConverter extends IConverter {
 		}
 		sec = configFile.getConfigurationSection("users");
 		for (String player : sec.getKeys(false)) {
-			groups = configFile.getStringList(player + "/groups");
-			sec = configFile.getConfigurationSection(player + "/permissions");
+			groups = configFile.getStringList("users/" + player + "/groups");
+			sec = configFile.getConfigurationSection("users/" + player + "/permissions");
 			for (String entry : sec.getKeys(false)) {
 				perms.put(entry, sec.getBoolean(entry));
 			}
-			sec = configFile.getConfigurationSection(player + "/worlds");
+			sec = configFile.getConfigurationSection("users/" + player + "/worlds");
 			for (String w : sec.getKeys(false)) {
 				for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
-					worldPerm.put(entry, sec.getBoolean(player + "/" + w + "/" + entry));
+					worldPerm.put(entry, sec.getBoolean("users/" + player + "/" + w + "/" + entry));
 				}
 				worldPerms.put(w, worldPerm);
 			}
@@ -137,15 +137,15 @@ public class PermissionsBukkitConverter extends IConverter {
 		}
 		sec = configFile.getConfigurationSection("groups");
 		for (String group : sec.getKeys(false)) {
-			inheritance = configFile.getStringList(group + "/inheritance");
-			sec = configFile.getConfigurationSection(group + "/permissions");
+			inheritance = configFile.getStringList("groups/" + group + "/inheritance");
+			sec = configFile.getConfigurationSection("groups/" + group + "/permissions");
 			for (String entry : sec.getKeys(false)) {
 				perms.put(entry, sec.getBoolean(entry));
 			}
-			sec = configFile.getConfigurationSection(group + "/worlds");
+			sec = configFile.getConfigurationSection("groups/" + group + "/worlds");
 			for (String w : sec.getKeys(false)) {
 				for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
-					worldPerm.put(entry, sec.getBoolean(group + "/" + w + "/" + entry));
+					worldPerm.put(entry, sec.getBoolean("groups/" + group + "/" + w + "/" + entry));
 				}
 				worldPerms.put(w, worldPerm);
 			}
