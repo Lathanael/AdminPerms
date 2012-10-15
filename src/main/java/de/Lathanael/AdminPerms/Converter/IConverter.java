@@ -28,10 +28,10 @@ import java.io.File;
  */
 public abstract class IConverter {
 
-	protected String path;
+	protected String pluginsFolder;
 	
 	public IConverter() {
-		path = "";
+		pluginsFolder = "";
 	}
 	
 	public String getPluginsFolder(final File file) {

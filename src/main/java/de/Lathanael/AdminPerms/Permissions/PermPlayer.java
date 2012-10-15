@@ -172,6 +172,14 @@ public class PermPlayer {
 		worldPermissions.get(world).put(permission, bool);
 	}
 	
+	public void addOrChangePermissions(final Map<String, Boolean> perms) {
+		permissions.putAll(perms);
+	}
+
+	public void addOrChangeWorldPermissions(final Map<String, Map<String, Boolean>> worldPerms) {
+		worldPermissions.putAll(worldPerms);
+	}
+	
 	public void removePermission(final String permission) {
 		permissions.put(permission, null);
 	}
@@ -209,6 +217,18 @@ public class PermPlayer {
 			this.groups.add(group.toLowerCase());
 		}
 		setHighestGroup();
+	}
+	
+	public void setPermissions(final Map<String, Boolean> permissions) {
+		this.permissions.clear();
+		this.permissions.putAll(permissions);
+	}
+	
+	public void setWorldPermissions(final Map<String, Map<String,Boolean>> worldPermissions) {
+		this.worldPermissions.clear();
+		for (String world : worldPermissions.keySet()) {
+			this.worldPermissions.put(world, worldPermissions.get(world));
+		}
 	}
 	
 	public void setCalculatedPerms(final Map<String, Boolean> perms) {

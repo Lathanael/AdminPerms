@@ -20,6 +20,22 @@
 
 package de.Lathanael.AdminPerms.Converter;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import de.Lathanael.AdminPerms.Backend.IBackend;
+import de.Lathanael.AdminPerms.Logging.DebugLog;
+import de.Lathanael.AdminPerms.Permissions.Group;
+import de.Lathanael.AdminPerms.Permissions.GroupHandler;
+import de.Lathanael.AdminPerms.Permissions.PermPlayer;
+import de.Lathanael.AdminPerms.Permissions.PermissionsHandler;
+import de.Lathanael.AdminPerms.Permissions.PlayerHandler;
 import de.Lathanael.AdminPerms.bukkit.Main;
 
 /**
@@ -29,9 +45,13 @@ import de.Lathanael.AdminPerms.bukkit.Main;
 public class PermissionsBukkitConverter extends IConverter {
 
 	public static PermissionsBukkitConverter instance = new PermissionsBukkitConverter();
+	private final String permBukkitPath;
+	private IBackend copyBackend;
 	
 	public PermissionsBukkitConverter() {
-		path = getPluginsFolder(Main.getInstance().getDataFolder());
+		pluginsFolder = getPluginsFolder(Main.getInstance().getDataFolder());
+		permBukkitPath = pluginsFolder + File.separator + "PermissionsBukkit";
+		copyBackend = PermissionsHandler.getInstance().getBackend();
 	}
 	
 	public static PermissionsBukkitConverter getInstance() {
@@ -44,8 +64,42 @@ public class PermissionsBukkitConverter extends IConverter {
 	 */
 	@Override
 	public void convertPlayerData() {
-		// TODO Auto-generated method stub
-		
+		List<String> groups;
+		Map<String, Boolean> perms = new HashMap<String, Boolean>();
+		Map<String, Map<String, Boolean>> worldPerms = new HashMap<String, Map<String, Boolean>>();
+		Map<String, Boolean> worldPerm = new HashMap<String, Boolean>();
+		YamlConfiguration configFile;
+		ConfigurationSection sec;
+		configFile =  new YamlConfiguration();
+		configFile.options().pathSeparator('/');
+		try {
+			configFile.load(permBukkitPath + File.separator + "config.yml");
+		} catch (Exception e) {
+			DebugLog.INSTANCE.log(Level.SEVERE, "Failure loading PermissionsBukkit config file!", e);
+			return;
+		}
+		sec = configFile.getConfigurationSection("users");
+		for (String player : sec.getKeys(false)) {
+			groups = configFile.getStringList(player + "/groups");
+			sec = configFile.getConfigurationSection(player + "/permissions");
+			for (String entry : sec.getKeys(false)) {
+				perms.put(entry, sec.getBoolean(entry));
+			}
+			sec = configFile.getConfigurationSection(player + "/worlds");
+			for (String w : sec.getKeys(false)) {
+				for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
+					worldPerm.put(entry, sec.getBoolean(player + "/" + w + "/" + entry));
+				}
+				worldPerms.put(w, worldPerm);
+			}
+			copyBackend.createDefaultPlayerEntry(player.toLowerCase());
+			copyBackend.loadPlayer(player.toLowerCase());
+			final PermPlayer copyPlayer = PlayerHandler.getInstance().getPlayer(player.toLowerCase());
+			copyPlayer.setGroups(groups);
+			copyPlayer.setPermissions(perms);
+			copyPlayer.setWorldPermissions(worldPerms);
+			copyBackend.reloadPlayer(player.toLowerCase());
+		}
 	}
 
 	/*
@@ -54,7 +108,41 @@ public class PermissionsBukkitConverter extends IConverter {
 	 */
 	@Override
 	public void convertGroupData() {
-		// TODO Auto-generated method stub
-		
-	}	
+		List<String> inheritance;
+		Map<String, Boolean> perms = new HashMap<String, Boolean>();
+		Map<String, Map<String, Boolean>> worldPerms = new HashMap<String, Map<String, Boolean>>();
+		Map<String, Boolean> worldPerm = new HashMap<String, Boolean>();
+		YamlConfiguration configFile;
+		ConfigurationSection sec;
+		configFile =  new YamlConfiguration();
+		configFile.options().pathSeparator('/');
+		try {
+			configFile.load(permBukkitPath + File.separator + "config.yml");
+		} catch (Exception e) {
+			DebugLog.INSTANCE.log(Level.SEVERE, "Failure loading PermissionsBukkit config file!", e);
+			return;
+		}
+		sec = configFile.getConfigurationSection("groups");
+		for (String group : sec.getKeys(false)) {
+			inheritance = configFile.getStringList(group + "/inheritance");
+			sec = configFile.getConfigurationSection(group + "/permissions");
+			for (String entry : sec.getKeys(false)) {
+				perms.put(entry, sec.getBoolean(entry));
+			}
+			sec = configFile.getConfigurationSection(group + "/worlds");
+			for (String w : sec.getKeys(false)) {
+				for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
+					worldPerm.put(entry, sec.getBoolean(group + "/" + w + "/" + entry));
+				}
+				worldPerms.put(w, worldPerm);
+			}
+			copyBackend.createDefaultGroupEntry(group.toLowerCase());
+			copyBackend.loadGroup(group.toLowerCase());
+			final Group copyGroup = GroupHandler.getInstance().getGroup(group.toLowerCase());
+			copyGroup.resetPermissions(perms);
+			copyGroup.resetWorldPermissions(worldPerms);
+			copyGroup.setInheritance(inheritance);
+			copyBackend.reloadGroup(group.toLowerCase());
+		}
+	}
 }

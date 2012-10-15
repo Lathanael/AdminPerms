@@ -72,7 +72,7 @@ public class PermissionsHandler {
 		}
 		if (PlayerHandler.getInstance().getPlayer(player) == null) {
 			perms.createDefaultPlayerEntry(player);
-			perms.load(player.getName());
+			perms.loadPlayer(player.getName());
 		}
 		try {
 			replacePermissible.replacePermissible(player, new AdminPermsPermissible(player));
@@ -96,7 +96,7 @@ public class PermissionsHandler {
 
 	public void unregisterPlayer(final Player player) {
 		if (permissions.containsKey(player.getName().toLowerCase())) {
-			perms.save(player.getName().toLowerCase());
+			perms.savePlayer(player.getName().toLowerCase());
 			try {
 				player.removeAttachment(permissions.get(player.getName().toLowerCase()));
 			}
@@ -123,7 +123,7 @@ public class PermissionsHandler {
 	}
 
 	public void refreshPermissions(final String player) {
-		perms.reload(player.toLowerCase());
+		perms.reloadPlayer(player.toLowerCase());
 		PermissionAttachment attachment = permissions.get(player.toLowerCase());
 		if (attachment == null) {
 			DebugLog.INSTANCE.log(Level.WARNING, "Unable to find attachment for: " + player);

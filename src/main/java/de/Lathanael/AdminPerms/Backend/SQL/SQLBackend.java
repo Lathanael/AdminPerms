@@ -67,7 +67,7 @@ public class SQLBackend implements IBackend {
 	 * @see de.Lathanael.AdminPerms.Backend.IBackend#save(java.lang.String)
 	 */
 	@Override
-	public void save(final String playerName) {
+	public void savePlayer(final String playerName) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -77,7 +77,7 @@ public class SQLBackend implements IBackend {
 	 * @see de.Lathanael.AdminPerms.Backend.IBackend#load(java.lang.String)
 	 */
 	@Override
-	public void load(final String playerName) {
+	public void loadPlayer(final String playerName) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -87,11 +87,41 @@ public class SQLBackend implements IBackend {
 	 * @see de.Lathanael.AdminPerms.Backend.IBackend#reload(java.lang.String)
 	 */
 	@Override
-	public void reload(final String playerName) {
-		save(playerName);
-		load(playerName);
+	public void reloadPlayer(final String playerName) {
+		savePlayer(playerName);
+		loadPlayer(playerName);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see de.Lathanael.AdminPerms.Backend.IBackend#saveGroup(java.lang.String)
+	 */
+	@Override
+	public void saveGroup(String groupName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see de.Lathanael.AdminPerms.Backend.IBackend#loadGroup(java.lang.String)
+	 */
+	@Override
+	public void loadGroup(String groupName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see de.Lathanael.AdminPerms.Backend.IBackend#reloadGroup(java.lang.String)
+	 */
+	@Override
+	public void reloadGroup(String groupName) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see de.Lathanael.AdminPerms.Backend.IBackend#createDefaultPlayerEntry(org.bukkit.entity.Player)
@@ -107,6 +137,16 @@ public class SQLBackend implements IBackend {
 	 */
 	@Override
 	public void createDefaultPlayerEntry(String playerName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see de.Lathanael.AdminPerms.Backend.IBackend#createDefaultGroupEntry(java.lang.String)
+	 */
+	@Override
+	public void createDefaultGroupEntry(String groupName) {
 		// TODO Auto-generated method stub
 		
 	}

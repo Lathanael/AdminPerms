@@ -34,13 +34,21 @@ public interface IBackend {
 	
 	public abstract void reload();
 	
-	public abstract void save(final String playerName);
+	public abstract void savePlayer(final String playerName);
 	
-	public abstract void load(final String playerName);
+	public abstract void loadPlayer(final String playerName);
 	
-	public abstract void reload(final String playerName);
+	public abstract void reloadPlayer(final String playerName);
+	
+	public abstract void saveGroup(final String groupName);
+	
+	public abstract void loadGroup(final String groupName);
+	
+	public abstract void reloadGroup(final String groupName);
 	
 	public abstract void createDefaultPlayerEntry(final Player player);
 	
 	abstract void createDefaultPlayerEntry(final String playerName);
+	
+	public abstract void createDefaultGroupEntry(final String groupName);
 }

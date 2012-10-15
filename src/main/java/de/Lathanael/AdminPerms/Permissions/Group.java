@@ -207,6 +207,23 @@ public class Group {
 		}
 	}
 	
+	public void setInheritance(final List<String> inheritance) {
+		this.inheritance.clear();
+		this.inheritance.addAll(inheritance);
+	}
+	
+	public void resetPermissions(final Map<String, Boolean> permissions) {
+		this.permissions.clear();
+		this.permissions.putAll(permissions);
+	}
+	
+	public void resetWorldPermissions(final Map<String, Map<String,Boolean>> worldPermissions) {
+		this.worldPermissions.clear();
+		for (String world : worldPermissions.keySet()) {
+			this.worldPermissions.put(world, worldPermissions.get(world));
+		}
+	}
+	
 	public Map<String, Boolean> getPermissions() {
 		return permissions;
 	}
