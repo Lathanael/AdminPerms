@@ -44,7 +44,7 @@ import de.Lathanael.AdminPerms.bukkit.Main;
  */
 public class PermissionsBukkitConverter extends IConverter {
 
-	public static PermissionsBukkitConverter instance = new PermissionsBukkitConverter();
+	private static PermissionsBukkitConverter instance = new PermissionsBukkitConverter();
 	private final String permBukkitPath;
 	private IBackend copyBackend;
 	
@@ -58,6 +58,19 @@ public class PermissionsBukkitConverter extends IConverter {
 		return instance;
 	}
 
+
+	@Override
+	public boolean run() {
+		final File permBukkit = new File(permBukkitPath);
+		if (permBukkit.exists()) {
+			convertGroupData();
+			convertPlayerData();
+			return true;
+		}
+		DebugLog.INSTANCE.info("PermissionsBukkit not present!");
+		return false;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see de.Lathanael.AdminPerms.Converter.IConverter#convertPlayerData()
