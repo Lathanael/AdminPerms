@@ -86,6 +86,9 @@ public class FileBackend implements IBackend {
 			configFile.set("inheritance", group.getInheritance());
 			configFile.set("promoteTo", group.getPromoteTo());
 			configFile.set("demoteTo", group.getDemoteTo());
+			configFile.set("rank", group.getRank());
+			// TODO: AutoRank feature
+			configFile.set("time", -1);
 			try {
 				configFile.save(file);
 			} catch (IOException e) {
@@ -368,6 +371,9 @@ public class FileBackend implements IBackend {
 		configFile.set("inheritance", group.getInheritance());
 		configFile.set("promoteTo", group.getPromoteTo());
 		configFile.set("demoteTo", group.getDemoteTo());
+		configFile.set("rank", group.getRank());
+		// TODO: AutoRank feature
+		configFile.set("time", -1);
 		try {
 			configFile.save(file);
 		} catch (IOException e) {
