@@ -49,7 +49,8 @@ public enum ConfigEnum {
 	BUILD("messages.build", ChatColor.RED + "You do not have permission to build here."),
 	FIRSTSTART("firstStart", true),
 	DEFAULT_GROUP("defaultGroup", "%rank%"),
-	AUTO_RANK("autoTimeRank", false);
+	AUTO_RANK("autoTimeRank", false),
+	IMPORT("importOtherPermissions", true);
 
 	private final String confVal;
 	private final Object defaultVal;

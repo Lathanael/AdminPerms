@@ -33,6 +33,7 @@ import de.Lathanael.AdminPerms.Command.Info;
 import de.Lathanael.AdminPerms.Command.PlayerCommand;
 import de.Lathanael.AdminPerms.Command.Rank;
 import de.Lathanael.AdminPerms.Command.Reload;
+import de.Lathanael.AdminPerms.Converter.PermissionsBukkitConverter;
 import de.Lathanael.AdminPerms.Listener.AdminPermsPlayerListener;
 import de.Lathanael.AdminPerms.Logging.DebugLog;
 import de.Lathanael.AdminPerms.Permissions.PermissionsHandler;
@@ -86,10 +87,10 @@ public class Main extends JavaPlugin {
 				ConfigEnum.save();
 			} catch (IOException e) {
 				DebugLog.INSTANCE.log(Level.WARNING, "Could not save default files.", e.getStackTrace());
-				getLogger().warning("Could not save default files, for more details open the debug.log (if debug logging is turned on!)");
+				getLogger().warning("Could not save default files, for more details open the debug.log!");
 			} catch (InvalidConfigurationException e) {
 				DebugLog.INSTANCE.log(Level.WARNING, "Could not load default files.", e.getStackTrace());
-				getLogger().warning("Could not load default files, for more details open the debug.log (if debug logging is turned on!)");
+				getLogger().warning("Could not load default files, for more details open the debug.log!");
 			}
 		}
 		final String backend = ConfigEnum.BACKEND.getString();
@@ -101,6 +102,23 @@ public class Main extends JavaPlugin {
 			// TODO: sql code
 		} else {
 			PermissionsHandler.getInstance().setBackend(new FileBackend(getDataFolder().getPath()));
+		}
+		if (ConfigEnum.IMPORT.getBoolean()) {
+			getLogger().info("Importing activated, trying to find supported plugins and convert thier settings...");
+			boolean done = false;
+			done = PermissionsBukkitConverter.getInstance().run();
+			if (done) {
+				getLogger().info("Successfully imported permissions!");
+			} else {
+				getLogger().info("No supported plugin was found!");
+			}
+			ConfigEnum.IMPORT.setValue(false);
+			try {
+				ConfigEnum.save();
+			} catch (IOException e) {
+				DebugLog.INSTANCE.log(Level.WARNING, "Could not save config file.", e.getStackTrace());
+				getLogger().warning("Could not save the config file, for more details open the debug.log!");
+			}
 		}
 		CommandsHandler.getInstance().registerCommand(Check.class);
 		CommandsHandler.getInstance().registerCommand(Dump.class);
