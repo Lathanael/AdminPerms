@@ -95,15 +95,19 @@ public class PermissionsBukkitConverter extends IConverter {
 		for (String player : sec.getKeys(false)) {
 			groups = configFile.getStringList("users/" + player + "/groups");
 			sec = configFile.getConfigurationSection("users/" + player + "/permissions");
-			for (String entry : sec.getKeys(false)) {
-				perms.put(entry, sec.getBoolean(entry));
+			if (sec != null) {
+				for (String entry : sec.getKeys(false)) {
+					perms.put(entry, sec.getBoolean(entry));
+				}
 			}
 			sec = configFile.getConfigurationSection("users/" + player + "/worlds");
-			for (String w : sec.getKeys(false)) {
-				for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
-					worldPerm.put(entry, sec.getBoolean("users/" + player + "/" + w + "/" + entry));
+			if (sec != null) {
+				for (String w : sec.getKeys(false)) {
+					for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
+						worldPerm.put(entry, sec.getBoolean("users/" + player + "/" + w + "/" + entry));
+					}
+					worldPerms.put(w, worldPerm);
 				}
-				worldPerms.put(w, worldPerm);
 			}
 			copyBackend.createDefaultPlayerEntry(player.toLowerCase());
 			copyBackend.loadPlayer(player.toLowerCase());
@@ -139,15 +143,19 @@ public class PermissionsBukkitConverter extends IConverter {
 		for (String group : sec.getKeys(false)) {
 			inheritance = configFile.getStringList("groups/" + group + "/inheritance");
 			sec = configFile.getConfigurationSection("groups/" + group + "/permissions");
-			for (String entry : sec.getKeys(false)) {
-				perms.put(entry, sec.getBoolean(entry));
+			if (sec != null) {
+				for (String entry : sec.getKeys(false)) {
+					perms.put(entry, sec.getBoolean(entry));
+				}
 			}
 			sec = configFile.getConfigurationSection("groups/" + group + "/worlds");
-			for (String w : sec.getKeys(false)) {
-				for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
-					worldPerm.put(entry, sec.getBoolean("groups/" + group + "/" + w + "/" + entry));
+			if (sec != null) {
+				for (String w : sec.getKeys(false)) {
+					for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
+						worldPerm.put(entry, sec.getBoolean("groups/" + group + "/" + w + "/" + entry));
+					}
+					worldPerms.put(w, worldPerm);
 				}
-				worldPerms.put(w, worldPerm);
 			}
 			copyBackend.createDefaultGroupEntry(group.toLowerCase());
 			copyBackend.loadGroup(group.toLowerCase());
