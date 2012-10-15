@@ -126,6 +126,11 @@ public class PermPlayer {
 		info.put(infoName, infoEntry);
 	}
 	
+	public void setInfos(final Map<String, String> infos) {
+		info.clear();
+		info.putAll(infos);
+	}
+	
 	/**
 	 * Retruns the name of this player as a {@code String}
 	 */

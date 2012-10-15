@@ -78,6 +78,15 @@ public class Group {
 		return (info.get(infoEntry) != null) ? info.get(infoEntry) : "";
 	}
 	
+	public void setInfo(final String infoEntry, final String entry) {
+		info.put(infoEntry, entry);
+	}
+	
+	public void setInfos(final Map<String, String> infos) {
+		info.clear();
+		info.putAll(infos);
+	}
+	
 	public List<String> getInheritance() {
 		return inheritance;
 	}

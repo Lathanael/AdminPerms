@@ -104,7 +104,7 @@ public class Main extends JavaPlugin {
 			PermissionsHandler.getInstance().setBackend(new FileBackend(getDataFolder().getPath()));
 		}
 		if (ConfigEnum.IMPORT.getBoolean()) {
-			getLogger().info("Importing activated, trying to find supported plugins and convert thier settings...");
+			getLogger().info("Importing activated, trying to find supported plugins and convert their settings...");
 			boolean done = false;
 			done = PermissionsBukkitConverter.getInstance().run();
 			if (done) {

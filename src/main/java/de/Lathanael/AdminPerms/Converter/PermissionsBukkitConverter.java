@@ -65,6 +65,7 @@ public class PermissionsBukkitConverter extends IConverter {
 		if (permBukkit.exists()) {
 			convertGroupData();
 			convertPlayerData();
+			copyBackend.reload();
 			return true;
 		}
 		DebugLog.INSTANCE.info("PermissionsBukkit not present!");
@@ -115,7 +116,8 @@ public class PermissionsBukkitConverter extends IConverter {
 			copyPlayer.setGroups(groups);
 			copyPlayer.setPermissions(perms);
 			copyPlayer.setWorldPermissions(worldPerms);
-			copyBackend.reloadPlayer(player.toLowerCase());
+			copyPlayer.setInfos(copyPlayer.getInfos());
+			copyBackend.savePlayer(player.toLowerCase());
 		}
 	}
 
@@ -163,7 +165,11 @@ public class PermissionsBukkitConverter extends IConverter {
 			copyGroup.resetPermissions(perms);
 			copyGroup.resetWorldPermissions(worldPerms);
 			copyGroup.setInheritance(inheritance);
-			copyBackend.reloadGroup(group.toLowerCase());
+			copyGroup.setRank(0);
+			copyGroup.setDemoteTo("");
+			copyGroup.setPromoteTo("");
+			copyGroup.setInfos(copyGroup.getInfos());
+			copyBackend.saveGroup(group.toLowerCase());
 		}
 	}
 }

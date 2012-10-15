@@ -174,6 +174,9 @@ public class GroupHandler {
 			inheritance = g.getInheritance();
 			for (String s : inheritance) {
 				group = getGroup(s.toLowerCase());
+				if (group == null) {
+					continue;
+				}
 				if (g.getRank() >= group.getRank()) {
 					g.copyNotExistingPermissions(group.getPermissions());
 					g.copyNotExistingWorldPermissions(group.getAllWorldPermissions());
