@@ -160,19 +160,25 @@ public class FileBackend implements IBackend {
 			demoteTo = configFile.getString("demoteTo", "");
 			inheritance = configFile.getStringList("inheritance");
 			sec = configFile.getConfigurationSection("permissions");
-			for (String entry : sec.getKeys(false)) {
-				perms.put(entry, sec.getBoolean(entry));
+			if (sec != null) {
+				for (String entry : sec.getKeys(false)) {
+					perms.put(entry, sec.getBoolean(entry));
+				}
 			}
 			sec = configFile.getConfigurationSection("info");
-			for (String entry : sec.getKeys(false)) {
-				info.put(entry, sec.getString(entry));
+			if (sec != null) {
+				for (String entry : sec.getKeys(false)) {
+					info.put(entry, sec.getString(entry));
+				}
 			}
 			sec = configFile.getConfigurationSection("worlds");
-			for (String w : sec.getKeys(false)) {
-				for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
-					worldPerm.put(entry, sec.getBoolean(w + "/" + entry));
+			if (sec != null) {
+				for (String w : sec.getKeys(false)) {
+					for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
+						worldPerm.put(entry, sec.getBoolean(w + "/" + entry));
+					}
+					worldPerms.put(w, worldPerm);
 				}
-				worldPerms.put(w, worldPerm);
 			}
 			GroupHandler.getInstance().addGroup(new Group(name, rank, perms, inheritance, info, worldPerms, promoteTo, demoteTo));
 		}
@@ -196,19 +202,25 @@ public class FileBackend implements IBackend {
 			name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
 			groups = configFile.getStringList("groups");
 			sec = configFile.getConfigurationSection("info");
-			for (String entry : sec.getKeys(false)) {
-				info.put(entry, sec.getString(entry));
+			if (sec != null) {
+				for (String entry : sec.getKeys(false)) {
+					info.put(entry, sec.getString(entry));
+				}
 			}
 			sec = configFile.getConfigurationSection("permissions");
-			for (String entry : sec.getKeys(false)) {
-				perms.put(entry, sec.getBoolean(entry));
+			if (sec != null) {
+				for (String entry : sec.getKeys(false)) {
+					perms.put(entry, sec.getBoolean(entry));
+				}
 			}
 			sec = configFile.getConfigurationSection("worlds");
-			for (String w : sec.getKeys(false)) {
-				for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
-					worldPerm.put(entry, sec.getBoolean(w + "/" + entry));
+			if (sec != null) {
+				for (String w : sec.getKeys(false)) {
+					for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
+						worldPerm.put(entry, sec.getBoolean(w + "/" + entry));
+					}
+					worldPerms.put(w, worldPerm);
 				}
-				worldPerms.put(w, worldPerm);
 			}
 			PlayerHandler.getInstance().addPlayer(new PermPlayer(name, perms, groups, info, worldPerms));
 		}
@@ -292,19 +304,25 @@ public class FileBackend implements IBackend {
 		String name = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf('.'));
 		groups = configFile.getStringList("groups");
 		sec = configFile.getConfigurationSection("info");
-		for (String entry : sec.getKeys(false)) {
-			info.put(entry, sec.getString(entry));
+		if (sec != null) {
+			for (String entry : sec.getKeys(false)) {
+				info.put(entry, sec.getString(entry));
+			}
 		}
 		sec = configFile.getConfigurationSection("permissions");
-		for (String entry : sec.getKeys(false)) {
-			perms.put(entry, sec.getBoolean(entry));
+		if (sec != null) {
+			for (String entry : sec.getKeys(false)) {
+				perms.put(entry, sec.getBoolean(entry));
+			}
 		}
 		sec = configFile.getConfigurationSection("worlds");
-		for (String w : sec.getKeys(false)) {
-			for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
-				worldPerm.put(entry, sec.getBoolean(w + "/" + entry));
+		if (sec != null) {
+			for (String w : sec.getKeys(false)) {
+				for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
+					worldPerm.put(entry, sec.getBoolean(w + "/" + entry));
+				}
+				worldPerms.put(w, worldPerm);
 			}
-			worldPerms.put(w, worldPerm);
 		}
 		PlayerHandler.getInstance().addPlayer(new PermPlayer(name, perms, groups, info, worldPerms));
 	}
@@ -396,19 +414,25 @@ public class FileBackend implements IBackend {
 		demoteTo = configFile.getString("demoteTo", "");
 		inheritance = configFile.getStringList("inheritance");
 		sec = configFile.getConfigurationSection("permissions");
-		for (String entry : sec.getKeys(false)) {
-			perms.put(entry, sec.getBoolean(entry));
+		if (sec != null) {
+			for (String entry : sec.getKeys(false)) {
+				perms.put(entry, sec.getBoolean(entry));
+			}
 		}
 		sec = configFile.getConfigurationSection("info");
-		for (String entry : sec.getKeys(false)) {
-			info.put(entry, sec.getString(entry));
+		if (sec != null) {
+			for (String entry : sec.getKeys(false)) {
+				info.put(entry, sec.getString(entry));
+			}
 		}
 		sec = configFile.getConfigurationSection("worlds");
-		for (String w : sec.getKeys(false)) {
-			for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
-				worldPerm.put(entry, sec.getBoolean(w + "/" + entry));
+		if (sec != null) {
+			for (String w : sec.getKeys(false)) {
+				for (String entry : sec.getConfigurationSection(w).getKeys(false)) {
+					worldPerm.put(entry, sec.getBoolean(w + "/" + entry));
+				}
+				worldPerms.put(w, worldPerm);
 			}
-			worldPerms.put(w, worldPerm);
 		}
 		GroupHandler.getInstance().addGroup(new Group(name, rank, perms, inheritance, info, worldPerms, promoteTo, demoteTo));
 		GroupHandler.getInstance().checkDefaultGroup();
