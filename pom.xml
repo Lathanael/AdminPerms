@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.Lathanael</groupId>
-	<artifactId>AdminPerms</artifactId>
+	<artifactId>AdminPermsAPI</artifactId>
 	<version>1.0</version>
 	<name>AdminPerms</name>
 	<scm>
@@ -229,16 +229,20 @@
 	</distributionManagement>
 	<dependencies>
 		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>craftbukkit</artifactId>
-			<version>1.4.7-R1.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.4.7-R1.1-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
+		<groupId>org.bukkit</groupId>
+		<artifactId>bukkit</artifactId>
+		<version>1.4.7-R1.1-SNAPSHOT</version>
+		<type>jar</type>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.bukkit</groupId>
+		<artifactId>craftbukkit</artifactId>
+		<version>1.4.7-R1.1-SNAPSHOT</version>
+		<type>jar</type>
+		<scope>provided</scope>
+	</dependency>
+  </dependencies>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

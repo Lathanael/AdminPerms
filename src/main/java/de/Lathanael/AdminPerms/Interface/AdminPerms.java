@@ -20,17 +20,13 @@
 
 package de.Lathanael.AdminPerms.Interface;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
 
 import de.Lathanael.AdminPerms.Permissions.Group;
-import de.Lathanael.AdminPerms.Permissions.GroupHandler;
 import de.Lathanael.AdminPerms.Permissions.PermPlayer;
-import de.Lathanael.AdminPerms.Permissions.PlayerHandler;
 
 /**
  * API for AdminPerms and its functions. Use this class in your plugin to
@@ -39,32 +35,26 @@ import de.Lathanael.AdminPerms.Permissions.PlayerHandler;
  * @author Lathanael (aka Philippe Leipold)
  *
  */
-public class AdminPerms {
+public abstract class AdminPerms {
 	
 	// Player Section
 	/**
 	 * Returns a {@code Set<PermPlayer>} which contains all currently with AdminPerms registered
 	 * players. Might be empty if no players are registered. 
 	 */
-	public Set<PermPlayer> getPlayers() {
-		return PlayerHandler.getInstance().getPlayers();
-	}
+	public abstract Set<PermPlayer> getPlayers() ;
 	
 	/**
 	 * Get a {@link PermPlayer} object for a given player name
 	 * @param playerName The name of the wanted player
 	 * @return A {@link PermPlayer} object or <b>null</b> if none exists
 	 */
-	public PermPlayer getPlayer(final String playerName) {
-		return PlayerHandler.getInstance().getPlayer(playerName);
-	}
+	public abstract PermPlayer getPlayer(final String playerName) ;
 	
 	/**
 	 * @see AdminPerms#getPlayer(String)
 	 */
-	public PermPlayer getPlayer(final Player player) {
-		return PlayerHandler.getInstance().getPlayer(player);
-	}
+	public abstract PermPlayer getPlayer(final Player player) ;
 	
 	/**
 	 * Gets all groups of a player
@@ -72,11 +62,7 @@ public class AdminPerms {
 	 * @return A {@code Set<String>} containing all the group names
 	 * or an <b>empty</b> Set if the player does not exist
 	 */
-	public Set<String> getPlayerGroups(final String playerName) {
-		return PlayerHandler.getInstance().getPlayer(playerName) != null
-				? PlayerHandler.getInstance().getPlayer(playerName).getGroups()
-				: new HashSet<String>();
-	}
+	public abstract Set<String> getPlayerGroups(final String playerName) ;
 	
 	/**
 	 * Gets a {@code Map<String, String>} containing all information entries
@@ -84,11 +70,7 @@ public class AdminPerms {
 	 * @return A {@code Map<String, String>} containing all information entries
 	 * or an <b>empty</b> Map if the player does not exist.
 	 */
-	public Map<String, String> getPlayerInfos(final String playerName) {
-		return PlayerHandler.getInstance().getPlayer(playerName) != null
-				? PlayerHandler.getInstance().getPlayer(playerName).getInfos()
-				: new HashMap<String, String>();
-	}
+	public abstract Map<String, String> getPlayerInfos(final String playerName) ;
 	
 	/**
 	 * Gets an information entry from a player
@@ -100,10 +82,7 @@ public class AdminPerms {
 	 * This might also be an empty String if there was no
 	 * information tied to the given Entry.
 	 */
-	public String getPlayerInfo(final String playerName, final String infoEntry) {
-		return PlayerHandler.getInstance().getPlayer(playerName) != null
-				? PlayerHandler.getInstance().getPlayer(playerName).getInfo(infoEntry) : "";
-	}
+	public abstract String getPlayerInfo(final String playerName, final String infoEntry) ;
 	
 	// Group Section
 	/**
@@ -113,9 +92,7 @@ public class AdminPerms {
 	 * @return A {@code Set<Group>} of {@link Group}s or an <b>empty {@code Set}</b>
 	 * if no group exists! 
 	 */
-	public Set<Group> getGroups() {
-		return GroupHandler.getInstance().getGroups();
-	}
+	public abstract Set<Group> getGroups() ;
 	
 	/**
 	 * Returns the {@link Group} linked to the given name.
@@ -124,9 +101,7 @@ public class AdminPerms {
 	 * @return The {@link Group} corresponding to the name or <b>null</b>
 	 * if it does not exist.
 	 */
-	public Group getGroup(final String groupName) {
-		return GroupHandler.getInstance().getGroup(groupName);
-	}
+	public abstract Group getGroup(final String groupName) ;
 	
 	/**
 	 * Returns the Names of all currently in AdminPerms existing groups.
@@ -134,18 +109,14 @@ public class AdminPerms {
 	 * @return A {@code Set<String>} containing the names of all groups or an <b>empty</b>
 	 * {@code Set} if no group exists!  
 	 */
-	public Set<String> getAllGroupNames() {
-		return GroupHandler.getInstance().getGroupNames();
-	}
+	public abstract Set<String> getAllGroupNames() ;
 	
 	/**
 	 * Gets the default {@link Group}
 	 * 
 	 * @return A {@link Group} object or <b>null</b> if there is not default group.
 	 */
-	public Group getDefaultGroup() {
-		return GroupHandler.getInstance().getDefaultGroup();
-	}
+	public abstract Group getDefaultGroup() ;
 	
 	/**
 	 * Gets a list of all players belonging to a group
@@ -154,9 +125,7 @@ public class AdminPerms {
 	 * @return A {@code Set<String>} of all players in the group or an <b>empty</b> {@code Set}
 	 * if the group does not exist.
 	 */
-	public Set<String> getPlayersFromGroup(final String groupName) {
-		return GroupHandler.getInstance().getPlayers(groupName);
-	}
+	public abstract Set<String> getPlayersFromGroup(final String groupName) ;
 	
 	/**
 	 * Gets a list of all online players belonging to a group
@@ -165,9 +134,7 @@ public class AdminPerms {
 	 * @return A {@code Set<Player>} of all online players in the group or an
 	 * <b>empty</b> {@code Set} if the group does not exist.
 	 */
-	public Set<Player> getOnlinePlayersFromGroup(final String groupName) {
-		return GroupHandler.getInstance().getOnlinePlayers(groupName);
-	}
+	public abstract Set<Player> getOnlinePlayersFromGroup(final String groupName) ;
 	
 	/**
 	 * Gets a {@link Map} of all information entries from the given group.
@@ -176,11 +143,7 @@ public class AdminPerms {
 	 * @return A {@code Map<String, String>} containing all information entries or
 	 * an <b>empty</b> Map if the group does not exist.
 	 */
-	public Map<String, String> getGroupInfos(final String groupName) {
-		return GroupHandler.getInstance().getGroup(groupName) != null
-				? GroupHandler.getInstance().getGroup(groupName).getInfos()
-				: new HashMap<String, String>();
-	}
+	public abstract Map<String, String> getGroupInfos(final String groupName) ;
 	
 	/**
 	 * Gets an information entry from a Group
@@ -192,8 +155,5 @@ public class AdminPerms {
 	 * This might also be an empty String if there was no
 	 * information tied to the given Entry.
 	 */
-	public String getGroupInfo(final String groupName, final String infoEntry) {
-		return GroupHandler.getInstance().getGroup(groupName) != null
-				? GroupHandler.getInstance().getGroup(groupName).getInfo(infoEntry) : "";
-	}
+	public abstract String getGroupInfo(final String groupName, final String infoEntry) ;
 }
