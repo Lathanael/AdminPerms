@@ -5,7 +5,7 @@ A plugin providing groups and other permissions configuration for Bukkit's built
 
 Sample configuration file and more info on how the configuration is laid out follows:
 
-PermissionsBukkit configuration file
+AdminPerms configuration file:
 
 A permission node is a string like 'permissions.build', usually starting
 with the name of the plugin. Refer to a plugin's documentation for what

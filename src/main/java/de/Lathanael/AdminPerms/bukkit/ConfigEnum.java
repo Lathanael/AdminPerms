@@ -50,7 +50,7 @@ public enum ConfigEnum {
 	FIRSTSTART("firstStart", true),
 	DEFAULT_GROUP("defaultGroup", "%rank%"),
 	AUTO_RANK("autoTimeRank", false),
-	IMPORT("importOtherPermissions", true);
+	IMPORT("importOtherPermissions", false);
 
 	private final String confVal;
 	private final Object defaultVal;

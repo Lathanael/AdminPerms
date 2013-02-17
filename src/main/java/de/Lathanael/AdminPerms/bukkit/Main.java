@@ -98,8 +98,10 @@ public class Main extends JavaPlugin {
 			PermissionsHandler.getInstance().setBackend(new FileBackend(getDataFolder().getPath()));
 		} else if (backend.equalsIgnoreCase("sqlite")) {
 			// TODO: sql code
+			PermissionsHandler.getInstance().setBackend(new FileBackend(getDataFolder().getPath()));
 		} else if (backend.equalsIgnoreCase("mysql")) {
 			// TODO: sql code
+			PermissionsHandler.getInstance().setBackend(new FileBackend(getDataFolder().getPath()));
 		} else {
 			PermissionsHandler.getInstance().setBackend(new FileBackend(getDataFolder().getPath()));
 		}
